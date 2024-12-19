@@ -1,0 +1,13 @@
+{
+  "defaultPluginClass": "com.teragrep.akv_01.plugin.Plugin",
+  "resourceIds": [
+    {
+      "resourceId": "123",
+      "pluginClass": "com.teragrep.akv_01.plugin.123Plugin"
+    },
+    {
+      "resourceId": "456",
+      "pluginClass": "com.teragrep.akv_01.plugin.456Plugin"
+    }
+  ]
+}
