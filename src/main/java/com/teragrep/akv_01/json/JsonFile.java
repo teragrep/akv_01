@@ -56,8 +56,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
- * Used to read a JSON-formatted file to memory from the file system.
- * Expects the top-level to be a JSON structure, like an object or an array.
+ * Used to read a JSON-formatted file to memory from the file system. Expects the top-level to be a JSON structure, like
+ * an object or an array.
  */
 public final class JsonFile {
 

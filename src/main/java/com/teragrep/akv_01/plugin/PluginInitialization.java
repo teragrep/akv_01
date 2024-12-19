@@ -57,6 +57,7 @@ public final class PluginInitialization {
 
     /**
      * Main constructor
+     * 
      * @param className full class name of the implementing class
      */
     public PluginInitialization(final String className) {

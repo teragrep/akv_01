@@ -66,6 +66,7 @@ public final class PluginMap {
 
     /**
      * Main constructor.
+     * 
      * @param json JsonStructure containing the expected plugin configuration JSON
      */
     public PluginMap(final JsonStructure json) {
@@ -73,10 +74,12 @@ public final class PluginMap {
     }
 
     /**
-     * Throws {@link JsonException} if given {@link JsonValue} is {@code null} or not of the expected {@link JsonValue.ValueType}
-     * @param msg Additional message to display at end of exception
+     * Throws {@link JsonException} if given {@link JsonValue} is {@code null} or not of the expected
+     * {@link JsonValue.ValueType}
+     * 
+     * @param msg   Additional message to display at end of exception
      * @param value JsonValue to assert
-     * @param type Type to assert
+     * @param type  Type to assert
      */
     private void assertType(final String msg, final JsonValue value, final JsonValue.ValueType type) {
         if (value == null) {
@@ -89,10 +92,12 @@ public final class PluginMap {
     }
 
     /**
-     * Throws {@link JsonException} if given {@code key} in {@link JsonStructure} is {@code null} or not of the expected {@link JsonValue.ValueType}
+     * Throws {@link JsonException} if given {@code key} in {@link JsonStructure} is {@code null} or not of the expected
+     * {@link JsonValue.ValueType}
+     * 
      * @param parentStructure parent JSON structure, where the key resides
-     * @param key key in JSON structure
-     * @param type type to assert
+     * @param key             key in JSON structure
+     * @param type            type to assert
      */
     private void assertType(final JsonStructure parentStructure, final String key, final JsonValue.ValueType type) {
         final JsonValue value = parentStructure.getValue("/" + key);
@@ -100,9 +105,9 @@ public final class PluginMap {
     }
 
     /**
-     * Returns a map of resourceId to plugin className. Returned map is unmodifiable,
-     * and the backing map is not available outside of the method, making it essentially
-     * immutable.
+     * Returns a map of resourceId to plugin className. Returned map is unmodifiable, and the backing map is not
+     * available outside of the method, making it essentially immutable.
+     * 
      * @return Unmodifiable map of resourceId to plugin className.
      */
     public Map<String, String> asUnmodifiableMap() {
@@ -150,6 +155,7 @@ public final class PluginMap {
 
     /**
      * Returns the default plugin class name.
+     * 
      * @return default plugin class name
      */
     public String defaultPluginClass() {
