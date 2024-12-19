@@ -148,6 +148,22 @@ public final class PluginMap {
         return Collections.unmodifiableMap(map);
     }
 
+    /**
+     * Returns the default plugin class name.
+     * @return default plugin class name
+     */
+    public String defaultPluginClass() {
+        assertType("in top-level structure", json, JsonValue.ValueType.OBJECT);
+        final JsonObject mainObject = json.asJsonObject();
+
+        if (mainObject.isEmpty()) {
+            throw new JsonException("Expected top-level structure to be a non-empty object");
+        }
+
+        assertType(mainObject, "defaultPluginClass", JsonValue.ValueType.STRING);
+        return mainObject.getString("defaultPluginClass");
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) {
