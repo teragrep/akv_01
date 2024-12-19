@@ -45,7 +45,12 @@
  */
 package com.teragrep.akv_01.plugin;
 
-import jakarta.json.*;
+import jakarta.json.JsonValue;
+import jakarta.json.JsonException;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonStructure;
+import jakarta.json.JsonString;
+import jakarta.json.JsonArray;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -119,11 +124,11 @@ public final class PluginMap {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PluginMap pluginMap = (PluginMap) o;
+        final PluginMap pluginMap = (PluginMap) o;
         return Objects.equals(json, pluginMap.json);
     }
 

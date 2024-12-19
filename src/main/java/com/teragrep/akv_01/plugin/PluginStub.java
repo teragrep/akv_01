@@ -52,12 +52,12 @@ public final class PluginStub implements Plugin {
 
     @Override
     public void process(
-            String event,
-            Map<String, Object> partitionContext,
-            ZonedDateTime enqueuedTime,
-            String offset,
-            Map<String, Object> props,
-            Map<String, Object> systemProps
+            final String event,
+            final Map<String, Object> partitionContext,
+            final ZonedDateTime enqueuedTime,
+            final String offset,
+            final Map<String, Object> props,
+            final Map<String, Object> systemProps
     ) {
         throw new UnsupportedOperationException("Stub object does not implement any methods");
     }

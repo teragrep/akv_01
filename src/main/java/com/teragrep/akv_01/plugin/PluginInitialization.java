@@ -56,27 +56,18 @@ public final class PluginInitialization {
         this.className = className;
     }
 
+    @SuppressWarnings(value = "unchecked")
     public Plugin plugin() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
             InstantiationException, IllegalAccessException {
-        return newInstance();
-    }
-
-    private Plugin newInstance() throws NoSuchMethodException, InvocationTargetException, InstantiationException,
-            IllegalAccessException, ClassNotFoundException {
-        Plugin rv;
-
-        Class<? extends Plugin> implClass = (Class<? extends Plugin>) Class.forName(className);
-        rv = implClass.getDeclaredConstructor().newInstance();
-
-        return rv;
+        return ((Class<? extends Plugin>) Class.forName(className)).getDeclaredConstructor().newInstance();
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        PluginInitialization that = (PluginInitialization) o;
+        final PluginInitialization that = (PluginInitialization) o;
         return Objects.equals(className, that.className);
     }
 
