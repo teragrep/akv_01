@@ -52,35 +52,60 @@ import jakarta.json.JsonStructure;
 import jakarta.json.JsonString;
 import jakarta.json.JsonArray;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Provides a map of ResourceId to plugin className.
+ */
 public final class PluginMap {
 
     private final JsonStructure json;
 
+    /**
+     * Main constructor.
+     * @param json JsonStructure containing the expected plugin configuration JSON
+     */
     public PluginMap(final JsonStructure json) {
         this.json = json;
     }
 
-    private void assertType(final String msg, final JsonValue value, final JsonValue.ValueType type)
-            throws IllegalArgumentException {
+    /**
+     * Throws {@link JsonException} if given {@link JsonValue} is {@code null} or not of the expected {@link JsonValue.ValueType}
+     * @param msg Additional message to display at end of exception
+     * @param value JsonValue to assert
+     * @param type Type to assert
+     */
+    private void assertType(final String msg, final JsonValue value, final JsonValue.ValueType type) {
         if (value == null) {
             throw new JsonException("Expected <" + type + "> but got no value " + msg);
         }
 
         if (!value.getValueType().equals(type)) {
-            throw new JsonException("Expected <" + type + "> but got <" + value.getValueType() + "> " + msg);
+            throw new JsonException("Expected <" + type + "> but got <[" + value.getValueType() + "]> " + msg);
         }
     }
 
+    /**
+     * Throws {@link JsonException} if given {@code key} in {@link JsonStructure} is {@code null} or not of the expected {@link JsonValue.ValueType}
+     * @param parentStructure parent JSON structure, where the key resides
+     * @param key key in JSON structure
+     * @param type type to assert
+     */
     private void assertType(final JsonStructure parentStructure, final String key, final JsonValue.ValueType type) {
         final JsonValue value = parentStructure.getValue("/" + key);
         assertType(key, value, type);
     }
 
-    public Map<String, String> asMap() {
+    /**
+     * Returns a map of resourceId to plugin className. Returned map is unmodifiable,
+     * and the backing map is not available outside of the method, making it essentially
+     * immutable.
+     * @return Unmodifiable map of resourceId to plugin className.
+     */
+    public Map<String, String> asUnmodifiableMap() {
         final Map<String, String> map = new HashMap<>();
 
         assertType("in top-level structure", json, JsonValue.ValueType.OBJECT);
@@ -114,13 +139,13 @@ public final class PluginMap {
             }
 
             if (map.containsKey(id.getString())) {
-                throw new JsonException("Duplicate plugin id " + id);
+                throw new JsonException("Duplicate resourceId: <[" + id + "]>");
             }
 
             map.put(id.getString(), className.getString());
         }
 
-        return map;
+        return Collections.unmodifiableMap(map);
     }
 
     @Override

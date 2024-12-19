@@ -48,10 +48,17 @@ package com.teragrep.akv_01.plugin;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
+/**
+ * Used to initialize an implementation of {@link Plugin} based on the class name.
+ */
 public final class PluginInitialization {
 
     private final String className;
 
+    /**
+     * Main constructor
+     * @param className full class name of the implementing class
+     */
     public PluginInitialization(final String className) {
         this.className = className;
     }
