@@ -105,13 +105,13 @@ public final class PluginMap {
     }
 
     /**
-     * Returns a map of resourceId to plugin className. Returned map is unmodifiable, and the backing map is not
+     * Returns a map of resourceId to pluginFactory config. Returned map is unmodifiable, and the backing map is not
      * available outside of the method, making it essentially immutable.
      * 
-     * @return Unmodifiable map of resourceId to plugin className.
+     * @return Unmodifiable map of resourceId to pluginFactory config.
      */
-    public Map<String, String> asUnmodifiableMap() {
-        final Map<String, String> map = new HashMap<>();
+    public Map<String, PluginFactoryConfig> asUnmodifiableMap() {
+        final Map<String, PluginFactoryConfig> map = new HashMap<>();
 
         assertType("in top-level structure", json, JsonValue.ValueType.OBJECT);
         final JsonObject mainObject = json.asJsonObject();
@@ -120,7 +120,7 @@ public final class PluginMap {
             throw new JsonException("Expected top-level structure to be a non-empty object");
         }
 
-        assertType(mainObject, "defaultPluginClass", JsonValue.ValueType.STRING);
+        assertType(mainObject, "defaultPluginFactoryClass", JsonValue.ValueType.STRING);
 
         assertType(mainObject, "resourceIds", JsonValue.ValueType.ARRAY);
         final JsonArray resourceIdPlugins = mainObject.getJsonArray("resourceIds");
@@ -132,22 +132,26 @@ public final class PluginMap {
             assertType(pluginObject, "resourceId", JsonValue.ValueType.STRING);
             final JsonString id = pluginObject.getJsonString("resourceId");
 
-            assertType(pluginObject, "pluginClass", JsonValue.ValueType.STRING);
-            final JsonString className = pluginObject.getJsonString("pluginClass");
+            assertType(pluginObject, "pluginFactoryClass", JsonValue.ValueType.STRING);
+            final JsonString className = pluginObject.getJsonString("pluginFactoryClass");
+
+            assertType(pluginObject, "pluginFactoryConfig", JsonValue.ValueType.STRING);
+            // No check if config is empty, as it might not be necessary to provide one.
+            final JsonString config = pluginObject.getJsonString("pluginFactoryConfig");
 
             if (id.getString().isEmpty()) {
                 throw new JsonException("ResourceId is empty");
             }
 
             if (className.getString().isEmpty()) {
-                throw new JsonException("PluginClass is empty");
+                throw new JsonException("PluginFactoryClass is empty");
             }
 
             if (map.containsKey(id.getString())) {
                 throw new JsonException("Duplicate resourceId: <[" + id + "]>");
             }
 
-            map.put(id.getString(), className.getString());
+            map.put(id.getString(), new PluginFactoryConfigImpl(className.getString(), config.getString()));
         }
 
         return Collections.unmodifiableMap(map);
@@ -158,7 +162,7 @@ public final class PluginMap {
      * 
      * @return default plugin class name
      */
-    public String defaultPluginClass() {
+    public String defaultPluginFactoryClassName() {
         assertType("in top-level structure", json, JsonValue.ValueType.OBJECT);
         final JsonObject mainObject = json.asJsonObject();
 
@@ -166,8 +170,8 @@ public final class PluginMap {
             throw new JsonException("Expected top-level structure to be a non-empty object");
         }
 
-        assertType(mainObject, "defaultPluginClass", JsonValue.ValueType.STRING);
-        return mainObject.getString("defaultPluginClass");
+        assertType(mainObject, "defaultPluginFactoryClass", JsonValue.ValueType.STRING);
+        return mainObject.getString("defaultPluginFactoryClass");
     }
 
     @Override

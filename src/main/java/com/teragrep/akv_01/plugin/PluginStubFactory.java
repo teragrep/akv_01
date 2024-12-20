@@ -45,22 +45,10 @@
  */
 package com.teragrep.akv_01.plugin;
 
-import com.teragrep.rlo_14.SyslogMessage;
-
-import java.time.ZonedDateTime;
-import java.util.Map;
-
-public final class PluginStub implements Plugin {
+public final class PluginStubFactory implements PluginFactory {
 
     @Override
-    public SyslogMessage syslogMessage(
-            final String event,
-            final Map<String, Object> partitionContext,
-            final ZonedDateTime enqueuedTime,
-            final String offset,
-            final Map<String, Object> props,
-            final Map<String, Object> systemProps
-    ) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
+    public Plugin plugin(final String config) {
+        return new PluginStub();
     }
 }

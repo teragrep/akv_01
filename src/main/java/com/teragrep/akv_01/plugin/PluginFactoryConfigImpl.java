@@ -45,22 +45,39 @@
  */
 package com.teragrep.akv_01.plugin;
 
-import com.teragrep.rlo_14.SyslogMessage;
+import java.util.Objects;
 
-import java.time.ZonedDateTime;
-import java.util.Map;
+public final class PluginFactoryConfigImpl implements PluginFactoryConfig {
 
-public final class PluginStub implements Plugin {
+    private final String path;
+    private final String className;
+
+    public PluginFactoryConfigImpl(final String className, final String path) {
+        this.className = className;
+        this.path = path;
+    }
 
     @Override
-    public SyslogMessage syslogMessage(
-            final String event,
-            final Map<String, Object> partitionContext,
-            final ZonedDateTime enqueuedTime,
-            final String offset,
-            final Map<String, Object> props,
-            final Map<String, Object> systemProps
-    ) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
+    public String pluginFactoryClassName() {
+        return className;
+    }
+
+    @Override
+    public String configPath() {
+        return path;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final PluginFactoryConfigImpl that = (PluginFactoryConfigImpl) o;
+        return Objects.equals(path, that.path) && Objects.equals(className, that.className);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(path, className);
     }
 }

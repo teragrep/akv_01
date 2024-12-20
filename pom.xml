@@ -56,6 +56,12 @@
       <version>3.17.4</version>
       <scope>test</scope>
     </dependency>
+    <!-- syslog -->
+    <dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>rlo_14</artifactId>
+      <version>1.0.1</version>
+    </dependency>
   </dependencies>
   <build>
     <directory>${project.basedir}/target</directory>
@@ -425,31 +431,6 @@
           <parallel>all</parallel>
           <useUnlimitedThreads>true</useUnlimitedThreads>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.6.0</version>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/jar-with-dependencies.xml</descriptor>
-          </descriptors>
-          <archive>
-            <manifest>
-              <mainClass>com.teragrep.akv_01.Main</mainClass>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-            </manifest>
-          </archive>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <phase>package</phase>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>

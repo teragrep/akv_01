@@ -45,22 +45,42 @@
  */
 package com.teragrep.akv_01.plugin;
 
-import com.teragrep.rlo_14.SyslogMessage;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 
-import java.time.ZonedDateTime;
-import java.util.Map;
+/**
+ * Used to initialize an implementation of {@link PluginFactory} based on the class name.
+ */
+public final class PluginFactoryInitialization {
 
-public final class PluginStub implements Plugin {
+    private final String className;
+
+    /**
+     * Main constructor
+     * 
+     * @param className full class name of the implementing class
+     */
+    public PluginFactoryInitialization(final String className) {
+        this.className = className;
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    public PluginFactory pluginFactory() throws ClassNotFoundException, InvocationTargetException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return ((Class<? extends PluginFactory>) Class.forName(className)).getDeclaredConstructor().newInstance();
+    }
 
     @Override
-    public SyslogMessage syslogMessage(
-            final String event,
-            final Map<String, Object> partitionContext,
-            final ZonedDateTime enqueuedTime,
-            final String offset,
-            final Map<String, Object> props,
-            final Map<String, Object> systemProps
-    ) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final PluginFactoryInitialization that = (PluginFactoryInitialization) o;
+        return Objects.equals(className, that.className);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(className);
     }
 }

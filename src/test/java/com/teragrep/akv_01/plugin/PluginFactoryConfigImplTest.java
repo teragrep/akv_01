@@ -45,42 +45,23 @@
  */
 package com.teragrep.akv_01.plugin;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Objects;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-/**
- * Used to initialize an implementation of {@link Plugin} based on the class name.
- */
-public final class PluginInitialization {
+public class PluginFactoryConfigImplTest {
 
-    private final String className;
-
-    /**
-     * Main constructor
-     * 
-     * @param className full class name of the implementing class
-     */
-    public PluginInitialization(final String className) {
-        this.className = className;
+    @Test
+    void testInitialization() {
+        final String p1 = "class.name";
+        final String p2 = "/path/to/file";
+        PluginFactoryConfig impl = new PluginFactoryConfigImpl(p1, p2);
+        Assertions.assertEquals(p1, impl.pluginFactoryClassName());
+        Assertions.assertEquals(p2, impl.configPath());
     }
 
-    @SuppressWarnings(value = "unchecked")
-    public Plugin plugin() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException,
-            InstantiationException, IllegalAccessException {
-        return ((Class<? extends Plugin>) Class.forName(className)).getDeclaredConstructor().newInstance();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        final PluginInitialization that = (PluginInitialization) o;
-        return Objects.equals(className, that.className);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(className);
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.simple().forClass(PluginFactoryConfigImpl.class).verify();
     }
 }
