@@ -1,0 +1,15 @@
+{
+  "defaultPluginFactoryClass": "com.teragrep.akv_01.plugin.Plugin",
+  "resourceIds": [
+    {
+      "resourceId": "123",
+      "pluginFactoryClass": "com.teragrep.akv_01.plugin.123Plugin",
+      "pluginFactoryConfig": "src/test/resources/123plugin.json"
+    },
+    {
+      "resourceId": "456",
+      "pluginFactoryClass": "com.teragrep.akv_01.plugin.456Plugin",
+      "pluginFactoryConfig": ""
+    }
+  ]
+}
