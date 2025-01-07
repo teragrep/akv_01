@@ -73,7 +73,7 @@ public class PluginMapTest {
     }
 
     @Test
-    void testNoDefaultPluginFactoryClassNameName() {
+    void testNoDefaultPluginFactoryClassName() {
         JsonStructure jsonStructure = Json.createObjectBuilder().add("resourceIds", Json.createArrayBuilder()).build();
         PluginMap pluginMap = new PluginMap(jsonStructure);
         JsonException je = Assertions.assertThrows(JsonException.class, pluginMap::asUnmodifiableMap);
