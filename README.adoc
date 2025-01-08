@@ -7,11 +7,16 @@
 
 // Add a short description of your project. Tell what your project does and what it's used for.
 
-This is a template repository for Teragrep organization.
+Allows to further process messages received from EventHub via plugins that can be defined for each of the resourceIds.
 
 == Features
 
 // List your project's features
+* Allows the resourceIds present in the events' properties to be mapped to specific plugins.
+* Plugins can implement processing, which can refine the final syslog message, such as specifying a more applicable app name or hostname based on the event data.
+* Plugins are to be specified in a JSON-formatted configuration file, where each resourceId is mapped to a specific PluginFactory object. Each PluginFactory can also
+have its own configuration file.
+* In case a resourceId is unexpected, the default PluginFactory class can be used instead.
 
 == Documentation
 
@@ -24,12 +29,98 @@ See the official documentation on https://docs.teragrep.com[docs.teragrep.com].
 == How to [compile/use/implement]
 
 // add instructions how people can start to use your project
+=== Compile using Maven
+
+The project can be compiled using Maven. It is recommended to use Java 11.
+
+[source,bash]
+----
+$ JAVA_HOME=/usr/lib/jvm/java-11-openjdk mvn clean package
+----
+
+=== Use in another project
+The project can be added to another project as a dependency using Maven. Add the following into your project's `pom.xml` file:
+[source,xml]
+----
+<dependency>
+    <groupId>com.teragrep</groupId>
+    <artifactId>akv_01</artifactId>
+    <version>x.y.z</version> <!-- Replace with latest version -->
+</dependency>
+----
+
+=== Basic usage
+
+The `PluginMap` object expects JSON with the following type of structure:
+
+[source,json]
+----
+{
+  "defaultPluginFactoryClass": "com.teragrep.akv_01.plugin.PluginFactory",
+  "resourceIds": [
+    {
+      "resourceId": "123",
+      "pluginFactoryClass": "com.teragrep.akv_01.plugin.PluginFactory123",
+      "pluginFactoryConfig": "src/test/resources/123plugin.json"
+    },
+    {
+      "resourceId": "456",
+      "pluginFactoryClass": "com.teragrep.akv_01.plugin.PluginFactory456",
+      "pluginFactoryConfig": ""
+    }
+  ]
+}
+----
+The `defaultPluginFactoryClass` is used in cases where the resourceId is not found in the configuration, and it is mandatory.
+The `resourceIds` array is also mandatory, and each item in the array must be a JsonObject with keys `resourceId`, `pluginFactoryClass` and `pluginFactoryConfig`.
+`pluginFactoryClass` is the full class name of any class implementing the `PluginFactory` interface. `pluginFactoryConfig` is the path to a JSON-formatted file, to be used by the specified pluginFactory.
+The `pluginFactoryConfig` JSON-formatted file does not have any specified schema, however it is recommended that the top-level structure is an array or object to be able to use the included `JsonFile` object.
+
+The `PluginMap` can be initialized by using the included `JsonFile` object, and the default pluginFactory class name and resourceId to config mapping can be retrieved:
+
+[source,java]
+----
+final PluginMap pluginMap = new PluginMap(new JsonFile("/path/to/json").asJsonStructure());
+final Map<String, PluginFactoryConfig> configs = pluginMap.asUnmodifiableMap();
+final String defaultPluginClassName = pluginMap.defaultPluginFactoryClassName();
+----
+
+The values retrieved from `PluginMap` can be used to initialize the PluginFactories:
+
+[source,java]
+----
+String className = defaultPluginClassName;
+String configPath = "";
+if (configs.containsKey("<resourceId here>")) {
+    className = configs.get("<resourceId here>").pluginFactoryClassName();
+    configPath = configs.get("<resourceId here>").configPath();
+}
+
+final PluginFactoryInitialization pluginFactoryInit = new PluginFactoryInitialization(className);
+final PluginFactory pluginFactory = pluginFactoryInit.pluginFactory();
+----
+
+With the initialized `PluginFactory`, the plugin can be created, and the JSON config path can be provided:
+
+[source,java]
+----
+final Plugin plugin = pluginFactory.plugin(configPath);
+----
+
+With the created `Plugin`, events can be processed into refined `SyslogMessages`:
+
+[source,java]
+----
+final SyslogMessage syslogMessage = plugin.syslogMessage(...);
+----
+
+The actual process inside the `Plugin` is dependent on the implementation.
 
 == Contributing
 
 // Change the repository name in the issues link to match with your project's name
 
-You can involve yourself with our project by https://github.com/teragrep/repo-template/issues/new/choose[opening an issue] or submitting a pull request.
+You can involve yourself with our project by https://github.com/teragrep/akv_01/issues/new/choose[opening an issue] or submitting a pull request.
 
 Contribution requirements:
 
