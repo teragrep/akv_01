@@ -12,10 +12,11 @@ Allows to further process messages received from EventHub via plugins that can b
 == Features
 
 // List your project's features
-* Contains JsonFile object, which can be used to read a JSON-formatted file into JsonStructure, which is used to generate a PluginMap.
-* PluginMap contains configurations for each PluginFactory for each defined resourceId. If resourceId is not found in the map, the default PluginFactory can be used instead.
-* PluginFactoryInitialization can be used to initialize PluginFactories. Path to possible PluginFactory configuration can be passed as an argument.
-* PluginFactories are used to initialize Plugins, which implement additional processing, such as gathering app name or hostname from events and outputting a SyslogMessage.
+* Allows the resourceIds present in the events' properties to be mapped to specific plugins.
+* Plugins can implement processing, which can refine the final syslog message, such as specifying a more applicable app name or hostname based on the event data.
+* Plugins are to be specified in a JSON-formatted configuration file, where each resourceId is mapped to a specific PluginFactory object. Each PluginFactory can also
+have its own configuration file.
+* In case a resourceId is unexpected, the default PluginFactory class can be used instead.
 
 == Documentation
 
@@ -50,7 +51,7 @@ The project can be added to another project as a dependency using Maven. Add the
 
 === Basic usage
 
-The PluginMap object expects JSON with the following type of structure:
+The `PluginMap` object expects JSON with the following type of structure:
 
 [source,json]
 ----
@@ -75,7 +76,7 @@ The `resourceIds` array is also mandatory, and each item in the array must be a 
 `pluginFactoryClass` is the full class name of any class implementing the `PluginFactory` interface. `pluginFactoryConfig` is the path to a JSON-formatted file, to be used by the specified pluginFactory.
 The `pluginFactoryConfig` JSON-formatted file does not have any specified schema, however it is recommended that the top-level structure is an array or object to be able to use the included `JsonFile` object.
 
-The PluginMap can be initialized by using the included JsonFile object, and the default pluginFactory class name and resourceId to config mapping can be retrieved:
+The `PluginMap` can be initialized by using the included `JsonFile` object, and the default pluginFactory class name and resourceId to config mapping can be retrieved:
 
 [source,java]
 ----
@@ -84,7 +85,7 @@ final Map<String, PluginFactoryConfig> configs = pluginMap.asUnmodifiableMap();
 final String defaultPluginClassName = pluginMap.defaultPluginFactoryClassName();
 ----
 
-The values retrieved from PluginMap can be used to initialize the PluginFactories:
+The values retrieved from `PluginMap` can be used to initialize the PluginFactories:
 
 [source,java]
 ----
@@ -99,21 +100,21 @@ final PluginFactoryInitialization pluginFactoryInit = new PluginFactoryInitializ
 final PluginFactory pluginFactory = pluginFactoryInit.pluginFactory();
 ----
 
-With the initialized PluginFactory, the plugin can be created, and the JSON config path can be provided:
+With the initialized `PluginFactory`, the plugin can be created, and the JSON config path can be provided:
 
 [source,java]
 ----
 final Plugin plugin = pluginFactory.plugin(configPath);
 ----
 
-With the created Plugin, events can be processed into refined SyslogMessages:
+With the created `Plugin`, events can be processed into refined `SyslogMessages`:
 
 [source,java]
 ----
 final SyslogMessage syslogMessage = plugin.syslogMessage(...);
 ----
 
-The actual process inside the Plugin is dependent on the implementation.
+The actual process inside the `Plugin` is dependent on the implementation.
 
 == Contributing
 
