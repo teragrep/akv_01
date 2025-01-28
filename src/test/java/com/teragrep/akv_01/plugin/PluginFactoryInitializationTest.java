@@ -61,7 +61,9 @@ public class PluginFactoryInitializationTest {
         PluginFactory pluginFactory = Assertions.assertDoesNotThrow(pi::pluginFactory);
         Assertions.assertEquals(PluginStubFactory.class, pluginFactory.getClass());
         Assertions
-                .assertThrows(UnsupportedOperationException.class, () -> pluginFactory.plugin("dummy-config").syslogMessage(new ParsedEvent[]{new ParsedEventStub()}));
+                .assertThrows(UnsupportedOperationException.class, () -> pluginFactory.plugin("dummy-config").syslogMessage(new ParsedEvent[] {
+                        new ParsedEventStub()
+                }));
     }
 
     @Test
