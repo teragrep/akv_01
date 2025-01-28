@@ -50,6 +50,7 @@ import jakarta.json.stream.JsonParsingException;
 
 import java.io.StringReader;
 import java.util.Map;
+import java.util.Objects;
 
 public final class EventImpl implements Event {
 
@@ -117,5 +118,21 @@ public final class EventImpl implements Event {
 
     public String offset() {
         return offset;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        EventImpl event = (EventImpl) o;
+        return Objects.equals(payload, event.payload) && Objects.equals(partitionCtx, event.partitionCtx) && Objects
+                .equals(properties, event.properties) && Objects.equals(systemProperties, event.systemProperties)
+                && Objects.equals(enqueuedTimeUtc, event.enqueuedTimeUtc) && Objects.equals(offset, event.offset);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(payload, partitionCtx, properties, systemProperties, enqueuedTimeUtc, offset);
     }
 }

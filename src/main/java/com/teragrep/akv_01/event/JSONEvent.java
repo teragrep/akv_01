@@ -52,6 +52,7 @@ import jakarta.json.JsonValue;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Objects;
 
 public final class JSONEvent implements ParsedEvent {
 
@@ -125,5 +126,19 @@ public final class JSONEvent implements ParsedEvent {
     @Override
     public String offset() {
         return event.offset();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        JSONEvent jsonEvent = (JSONEvent) o;
+        return Objects.equals(json, jsonEvent.json) && Objects.equals(event, jsonEvent.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(json, event);
     }
 }

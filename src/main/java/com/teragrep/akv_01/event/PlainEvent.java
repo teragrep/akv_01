@@ -49,6 +49,7 @@ import jakarta.json.JsonStructure;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Objects;
 
 public final class PlainEvent implements ParsedEvent {
 
@@ -103,5 +104,19 @@ public final class PlainEvent implements ParsedEvent {
     @Override
     public String offset() {
         return event.offset();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PlainEvent that = (PlainEvent) o;
+        return Objects.equals(event, that.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(event);
     }
 }
