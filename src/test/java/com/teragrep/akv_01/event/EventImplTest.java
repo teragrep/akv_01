@@ -43,34 +43,56 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.plugin;
+package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.ParsedEventStub;
+import jakarta.json.JsonStructure;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class PluginFactoryInitializationTest {
+import java.util.HashMap;
+import java.util.Map;
+
+public final class EventImplTest {
 
     @Test
-    void testSuccessfulInitialization() {
-        PluginFactoryInitialization pi = new PluginFactoryInitialization(
-                "com.teragrep.akv_01.plugin.PluginStubFactory"
-        );
-        PluginFactory pluginFactory = Assertions.assertDoesNotThrow(pi::pluginFactory);
-        Assertions.assertEquals(PluginStubFactory.class, pluginFactory.getClass());
-        Assertions
-                .assertThrows(UnsupportedOperationException.class, () -> pluginFactory.plugin("dummy-config").syslogMessage(new ParsedEventStub()));
+    void testWithNonJsonPayload() {
+        final String payload = "payload here";
+        final Map<String, Object> partitionContext = new HashMap<>();
+        final Map<String, Object> properties = new HashMap<>();
+        final Map<String, Object> systemProperties = new HashMap<>();
+        final Object enqueuedTimeUtc = "2010-01-01T00:00:00";
+        final String offset = "0";
+        Event impl = new EventImpl(payload, partitionContext, properties, systemProperties, enqueuedTimeUtc, offset);
+
+        ParsedEvent parsed = impl.parsedEvent();
+        Assertions.assertFalse(parsed.isJsonStructure());
+        Assertions.assertThrows(UnsupportedOperationException.class, parsed::asJsonStructure);
+        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().toString());
     }
 
     @Test
-    void testFailedInitialization() {
-        PluginFactoryInitialization pi = new PluginFactoryInitialization("NonExistentPlugin");
-        Assertions.assertThrows(ClassNotFoundException.class, pi::pluginFactory);
+    void testWithJsonPayload() {
+        final String payload = "{\"resourceId\": \"12345\"}";
+        final Map<String, Object> partitionContext = new HashMap<>();
+        final Map<String, Object> properties = new HashMap<>();
+        final Map<String, Object> systemProperties = new HashMap<>();
+        final Object enqueuedTimeUtc = "2010-01-01T00:00:00";
+        final String offset = "0";
+        Event impl = new EventImpl(payload, partitionContext, properties, systemProperties, enqueuedTimeUtc, offset);
+
+        ParsedEvent parsed = impl.parsedEvent();
+        Assertions.assertTrue(parsed.isJsonStructure());
+        JsonStructure jsonStructure = Assertions.assertDoesNotThrow(parsed::asJsonStructure);
+        Assertions.assertTrue(jsonStructure.asJsonObject().containsKey("resourceId"));
+        Assertions.assertEquals("12345", jsonStructure.asJsonObject().getString("resourceId"));
+        Assertions.assertEquals("12345", parsed.resourceId());
+        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().toString());
+
     }
 
     @Test
     void testEqualsContract() {
-        EqualsVerifier.simple().forClass(PluginFactoryInitialization.class).verify();
+        EqualsVerifier.forClass(EventImpl.class).verify();
     }
 }

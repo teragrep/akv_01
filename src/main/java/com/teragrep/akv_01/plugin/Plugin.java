@@ -45,19 +45,10 @@
  */
 package com.teragrep.akv_01.plugin;
 
+import com.teragrep.akv_01.event.ParsedEvent;
 import com.teragrep.rlo_14.SyslogMessage;
-
-import java.time.ZonedDateTime;
-import java.util.Map;
 
 public interface Plugin {
 
-    public abstract SyslogMessage syslogMessage(
-            String event,
-            Map<String, Object> partitionContext,
-            ZonedDateTime enqueuedTime,
-            String offset,
-            Map<String, Object> props,
-            Map<String, Object> systemProps
-    );
+    public abstract SyslogMessage syslogMessage(ParsedEvent parsedEvent);
 }

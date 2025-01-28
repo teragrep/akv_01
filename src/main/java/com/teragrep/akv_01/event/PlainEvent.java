@@ -43,15 +43,80 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.plugin;
+package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.rlo_14.SyslogMessage;
+import jakarta.json.JsonStructure;
 
-public final class PluginStub implements Plugin {
+import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.Objects;
+
+public final class PlainEvent implements ParsedEvent {
+
+    private final Event event;
+
+    public PlainEvent(final Event event) {
+        this.event = event;
+    }
 
     @Override
-    public SyslogMessage syslogMessage(final ParsedEvent parsedEvent) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
+    public JsonStructure asJsonStructure() {
+        throw new UnsupportedOperationException("PlainEvent cannot be represented in JSON format");
+    }
+
+    @Override
+    public boolean isJsonStructure() {
+        return false;
+    }
+
+    @Override
+    public String asString() {
+        return event.payload();
+    }
+
+    @Override
+    public String resourceId() {
+        throw new UnsupportedOperationException(
+                "PlainEvent does not contain resourceId as it cannot be represented in JSON format"
+        );
+    }
+
+    @Override
+    public Map<String, Object> partitionContext() {
+        return event.partitionCtx();
+    }
+
+    @Override
+    public Map<String, Object> properties() {
+        return event.properties();
+    }
+
+    @Override
+    public Map<String, Object> systemProperties() {
+        return event.systemProperties();
+    }
+
+    @Override
+    public ZonedDateTime enqueuedTime() {
+        return ZonedDateTime.parse(event.enqueuedTimeUtc() + "Z");
+    }
+
+    @Override
+    public String offset() {
+        return event.offset();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PlainEvent that = (PlainEvent) o;
+        return Objects.equals(event, that.event);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(event);
     }
 }

@@ -43,15 +43,35 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.plugin;
+package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.rlo_14.SyslogMessage;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public final class PluginStub implements Plugin {
+import java.util.HashMap;
 
-    @Override
-    public SyslogMessage syslogMessage(final ParsedEvent parsedEvent) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
+public final class PlainEventTest {
+
+    @Test
+    void testInitialization() {
+        PlainEvent event = new PlainEvent(
+                new EventImpl(
+                        "non-json payload",
+                        new HashMap<>(),
+                        new HashMap<>(),
+                        new HashMap<>(),
+                        "2010-01-01T00:00Z",
+                        "0"
+                )
+        );
+        Assertions.assertEquals("non-json payload", event.asString());
+        Assertions.assertFalse(event.isJsonStructure());
+        Assertions.assertThrows(UnsupportedOperationException.class, event::asJsonStructure);
+    }
+
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.forClass(PlainEvent.class).verify();
     }
 }

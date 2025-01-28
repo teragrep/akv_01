@@ -43,15 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.plugin;
+package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.rlo_14.SyslogMessage;
+import java.util.Map;
 
-public final class PluginStub implements Plugin {
+public interface Event {
 
-    @Override
-    public SyslogMessage syslogMessage(final ParsedEvent parsedEvent) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
-    }
+    public abstract ParsedEvent parsedEvent();
+
+    public abstract String payload();
+
+    public abstract Map<String, Object> partitionCtx();
+
+    public abstract Map<String, Object> properties();
+
+    public abstract Map<String, Object> systemProperties();
+
+    public abstract Object enqueuedTimeUtc();
+
+    public abstract String offset();
 }

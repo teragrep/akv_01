@@ -43,15 +43,57 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.plugin;
+package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.rlo_14.SyslogMessage;
+import jakarta.json.JsonStructure;
 
-public final class PluginStub implements Plugin {
+import java.time.ZonedDateTime;
+import java.util.Map;
+
+public final class ParsedEventStub implements ParsedEvent {
 
     @Override
-    public SyslogMessage syslogMessage(final ParsedEvent parsedEvent) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
+    public JsonStructure asJsonStructure() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public boolean isJsonStructure() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public String asString() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public String resourceId() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public Map<String, Object> partitionContext() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public Map<String, Object> properties() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public Map<String, Object> systemProperties() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public ZonedDateTime enqueuedTime() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public String offset() {
+        throw new UnsupportedOperationException("Stub object");
     }
 }

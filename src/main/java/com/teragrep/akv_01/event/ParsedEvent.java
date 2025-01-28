@@ -43,15 +43,30 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.plugin;
+package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.rlo_14.SyslogMessage;
+import jakarta.json.JsonStructure;
 
-public final class PluginStub implements Plugin {
+import java.time.ZonedDateTime;
+import java.util.Map;
 
-    @Override
-    public SyslogMessage syslogMessage(final ParsedEvent parsedEvent) {
-        throw new UnsupportedOperationException("Stub object does not implement any methods");
-    }
+public interface ParsedEvent {
+
+    public abstract JsonStructure asJsonStructure();
+
+    public abstract boolean isJsonStructure();
+
+    public abstract String asString();
+
+    public abstract String resourceId();
+
+    public abstract Map<String, Object> partitionContext();
+
+    public abstract Map<String, Object> properties();
+
+    public abstract Map<String, Object> systemProperties();
+
+    public abstract ZonedDateTime enqueuedTime();
+
+    public abstract String offset();
 }
