@@ -45,6 +45,7 @@
  */
 package com.teragrep.akv_01.plugin;
 
+import com.teragrep.akv_01.event.ParsedEvent;
 import com.teragrep.akv_01.event.ParsedEventStub;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
@@ -60,7 +61,7 @@ public class PluginFactoryInitializationTest {
         PluginFactory pluginFactory = Assertions.assertDoesNotThrow(pi::pluginFactory);
         Assertions.assertEquals(PluginStubFactory.class, pluginFactory.getClass());
         Assertions
-                .assertThrows(UnsupportedOperationException.class, () -> pluginFactory.plugin("dummy-config").syslogMessage(new ParsedEventStub()));
+                .assertThrows(UnsupportedOperationException.class, () -> pluginFactory.plugin("dummy-config").syslogMessage(new ParsedEvent[]{new ParsedEventStub()}));
     }
 
     @Test
