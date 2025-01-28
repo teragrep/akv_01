@@ -50,5 +50,5 @@ import com.teragrep.rlo_14.SyslogMessage;
 
 public interface Plugin {
 
-    public abstract SyslogMessage[] syslogMessage(ParsedEvent[] parsedEvents);
+    public abstract SyslogMessage syslogMessage(ParsedEvent parsedEvent);
 }
