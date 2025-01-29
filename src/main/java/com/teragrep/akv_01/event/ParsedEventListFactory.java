@@ -45,12 +45,9 @@
  */
 package com.teragrep.akv_01.event;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-public final class ParsedEventArrayFactory {
+public final class ParsedEventListFactory {
 
     private final String[] payloads;
     private final Map<String, Object> partitionCtx;
@@ -59,7 +56,7 @@ public final class ParsedEventArrayFactory {
     private final List<Object> enqueuedTimeUtcList;
     private final List<String> offsetList;
 
-    public ParsedEventArrayFactory(
+    public ParsedEventListFactory(
             final String[] payloads,
             final Map<String, Object> partitionCtx,
             final Map<String, Object>[] propertiesArray,
@@ -75,17 +72,22 @@ public final class ParsedEventArrayFactory {
         this.offsetList = offsetList;
     }
 
-    public ParsedEvent[] asArray() {
-        final ParsedEvent[] events = new ParsedEvent[payloads.length];
+    public List<ParsedEvent> asList() {
+        final List<ParsedEvent> events = new ArrayList<>(payloads.length);
         for (int i = 0; i < payloads.length; i++) {
-            events[i] = new EventImpl(
-                    payloads[i],
-                    partitionCtx,
-                    propertiesArray[i],
-                    systemPropertiesArray[i],
-                    enqueuedTimeUtcList.get(i),
-                    offsetList.get(i)
-            ).parsedEvent();
+            if (payloads[i] != null) {
+                events
+                        .add(
+                                new EventImpl(
+                                        payloads[i],
+                                        partitionCtx,
+                                        propertiesArray[i],
+                                        systemPropertiesArray[i],
+                                        enqueuedTimeUtcList.get(i),
+                                        offsetList.get(i)
+                                ).parsedEvent()
+                        );
+            }
         }
         return events;
     }
@@ -95,7 +97,7 @@ public final class ParsedEventArrayFactory {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ParsedEventArrayFactory that = (ParsedEventArrayFactory) o;
+        ParsedEventListFactory that = (ParsedEventListFactory) o;
         return Objects.deepEquals(payloads, that.payloads) && Objects.equals(partitionCtx, that.partitionCtx)
                 && Objects.deepEquals(propertiesArray, that.propertiesArray) && Objects.deepEquals(systemPropertiesArray, that.systemPropertiesArray) && Objects.equals(enqueuedTimeUtcList, that.enqueuedTimeUtcList) && Objects.equals(offsetList, that.offsetList);
     }

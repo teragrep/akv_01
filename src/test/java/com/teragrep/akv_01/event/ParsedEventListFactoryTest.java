@@ -54,10 +54,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-public final class ParsedEventArrayFactoryTest {
+public final class ParsedEventListFactoryTest {
 
     @Test
-    void testAsArrayMethod() {
+    void testAsListMethod() {
         final String payload = Json.createObjectBuilder().add("resourceId", "123").build().toString();
         final String[] payloads = new String[] {
                 payload, "string payload", payload
@@ -73,7 +73,7 @@ public final class ParsedEventArrayFactoryTest {
                 .asList("2010-01-01T00:00:00", "2020-01-01T01:02:03", "2030-04-07T12:34:10");
         final List<String> offsetList = Arrays.asList("0", "1", "2");
 
-        final ParsedEventArrayFactory arrayFactory = new ParsedEventArrayFactory(
+        final ParsedEventListFactory arrayFactory = new ParsedEventListFactory(
                 payloads,
                 partitionCtx,
                 propArray,
@@ -82,21 +82,22 @@ public final class ParsedEventArrayFactoryTest {
                 offsetList
         );
 
-        final ParsedEvent[] events = Assertions.assertDoesNotThrow(arrayFactory::asArray);
-        Assertions.assertEquals(3, events.length);
-        Assertions.assertEquals(JSONEvent.class, events[0].getClass());
-        Assertions.assertEquals(PlainEvent.class, events[1].getClass());
-        Assertions.assertEquals(JSONEvent.class, events[2].getClass());
-        Assertions.assertEquals(ZonedDateTime.of(2010, 1, 1, 0, 0, 0, 0, ZoneId.of("Z")), events[0].enqueuedTime());
-        Assertions.assertEquals(ZonedDateTime.of(2020, 1, 1, 1, 2, 3, 0, ZoneId.of("Z")), events[1].enqueuedTime());
-        Assertions.assertEquals(ZonedDateTime.of(2030, 4, 7, 12, 34, 10, 0, ZoneId.of("Z")), events[2].enqueuedTime());
-        Assertions.assertEquals("123", events[0].resourceId());
-        Assertions.assertThrows(UnsupportedOperationException.class, events[1]::resourceId);
-        Assertions.assertEquals("123", events[2].resourceId());
+        final List<ParsedEvent> events = Assertions.assertDoesNotThrow(arrayFactory::asList);
+        Assertions.assertEquals(3, events.size());
+        Assertions.assertEquals(JSONEvent.class, events.get(0).getClass());
+        Assertions.assertEquals(PlainEvent.class, events.get(1).getClass());
+        Assertions.assertEquals(JSONEvent.class, events.get(2).getClass());
+        Assertions.assertEquals(ZonedDateTime.of(2010, 1, 1, 0, 0, 0, 0, ZoneId.of("Z")), events.get(0).enqueuedTime());
+        Assertions.assertEquals(ZonedDateTime.of(2020, 1, 1, 1, 2, 3, 0, ZoneId.of("Z")), events.get(1).enqueuedTime());
+        Assertions
+                .assertEquals(ZonedDateTime.of(2030, 4, 7, 12, 34, 10, 0, ZoneId.of("Z")), events.get(2).enqueuedTime());
+        Assertions.assertEquals("123", events.get(0).resourceId());
+        Assertions.assertThrows(UnsupportedOperationException.class, events.get(1)::resourceId);
+        Assertions.assertEquals("123", events.get(2).resourceId());
     }
 
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(ParsedEventArrayFactory.class).verify();
+        EqualsVerifier.forClass(ParsedEventListFactory.class).verify();
     }
 }

@@ -48,7 +48,9 @@ package com.teragrep.akv_01.plugin;
 import com.teragrep.akv_01.event.ParsedEvent;
 import com.teragrep.rlo_14.SyslogMessage;
 
+import java.util.List;
+
 public interface Plugin {
 
-    public abstract SyslogMessage syslogMessage(ParsedEvent parsedEvent);
+    public abstract List<SyslogMessage> syslogMessage(ParsedEvent parsedEvent);
 }
