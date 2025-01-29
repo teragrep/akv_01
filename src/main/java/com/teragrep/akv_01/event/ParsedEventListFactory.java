@@ -75,17 +75,19 @@ public final class ParsedEventListFactory {
     public List<ParsedEvent> asList() {
         final List<ParsedEvent> events = new ArrayList<>(payloads.length);
         for (int i = 0; i < payloads.length; i++) {
-            events
-                    .add(
-                            new EventImpl(
-                                    payloads[i],
-                                    partitionCtx,
-                                    propertiesArray[i],
-                                    systemPropertiesArray[i],
-                                    enqueuedTimeUtcList.get(i),
-                                    offsetList.get(i)
-                            ).parsedEvent()
-                    );
+            if (payloads[i] != null) {
+                events
+                        .add(
+                                new EventImpl(
+                                        payloads[i],
+                                        partitionCtx,
+                                        propertiesArray[i],
+                                        systemPropertiesArray[i],
+                                        enqueuedTimeUtcList.get(i),
+                                        offsetList.get(i)
+                                ).parsedEvent()
+                        );
+            }
         }
         return events;
     }
