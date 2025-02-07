@@ -64,6 +64,7 @@ public class JsonFileTest {
         final JsonStructure expected = Json
                 .createObjectBuilder()
                 .add("defaultPluginFactoryClass", "com.teragrep.akv_01.plugin.Plugin")
+                .add("exceptionPluginFactoryClass", "com.teragrep.akv_01.plugin.ExceptionPlugin")
                 .add("resourceIds", Json.createArrayBuilder().add(Json.createObjectBuilder().add("resourceId", "123").add("pluginFactoryClass", "com.teragrep.akv_01.plugin.123Plugin").add("pluginFactoryConfig", "src/test/resources/123plugin.json")).add(Json.createObjectBuilder().add("resourceId", "456").add("pluginFactoryClass", "com.teragrep.akv_01.plugin.456Plugin").add("pluginFactoryConfig", ""))).build();
 
         Assertions.assertEquals(expected, structure);
