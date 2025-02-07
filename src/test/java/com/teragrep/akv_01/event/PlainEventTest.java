@@ -61,7 +61,7 @@ public final class PlainEventTest {
                         new HashMap<>(),
                         new HashMap<>(),
                         new HashMap<>(),
-                        "2010-01-01T00:00Z",
+                        "2010-01-01T00:00",
                         "0"
                 )
         );

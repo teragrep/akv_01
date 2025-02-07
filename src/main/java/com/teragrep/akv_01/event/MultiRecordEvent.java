@@ -45,78 +45,62 @@
  */
 package com.teragrep.akv_01.event;
 
+import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
-import java.time.ZonedDateTime;
-import java.util.Map;
-import java.util.Objects;
+import java.util.List;
 
-public final class PlainEvent implements ParsedEvent {
+public final class MultiRecordEvent {
 
-    private final Event event;
+    private final ParsedEvent parsedEvent;
 
-    public PlainEvent(final Event event) {
-        this.event = event;
+    public MultiRecordEvent(final ParsedEvent parsedEvent) {
+        this.parsedEvent = parsedEvent;
     }
 
-    @Override
-    public JsonStructure asJsonStructure() {
-        throw new UnsupportedOperationException("PlainEvent cannot be represented in JSON format");
-    }
-
-    @Override
-    public boolean isJsonStructure() {
-        return false;
-    }
-
-    @Override
-    public String asString() {
-        return event.payload();
-    }
-
-    @Override
-    public String resourceId() {
-        throw new UnsupportedOperationException(
-                "PlainEvent does not contain resourceId as it cannot be represented in JSON format"
-        );
-    }
-
-    @Override
-    public Map<String, Object> partitionContext() {
-        return event.partitionCtx();
-    }
-
-    @Override
-    public Map<String, Object> properties() {
-        return event.properties();
-    }
-
-    @Override
-    public Map<String, Object> systemProperties() {
-        return event.systemProperties();
-    }
-
-    @Override
-    public ZonedDateTime enqueuedTime() {
-        return event.enqueuedTimeUtc();
-    }
-
-    @Override
-    public String offset() {
-        return event.offset();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
+    public boolean isValid() {
+        if (!parsedEvent.isJsonStructure()) {
+            // not json structure
             return false;
         }
-        PlainEvent that = (PlainEvent) o;
-        return Objects.equals(event, that.event);
+
+        final JsonStructure mainStructure = parsedEvent.asJsonStructure();
+        if (!mainStructure.getValueType().equals(JsonValue.ValueType.OBJECT)) {
+            // not json object
+            return false;
+        }
+
+        final JsonObject mainObject = mainStructure.asJsonObject();
+        if (
+            !mainObject.containsKey("records")
+                    || !mainObject.get("records").getValueType().equals(JsonValue.ValueType.ARRAY)
+        ) {
+            // no records array
+            return false;
+        }
+
+        return true;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(event);
+    public List<ParsedEvent> records() {
+        if (!isValid()) {
+            throw new IllegalStateException("Event is not a multi record event");
+        }
+
+        return parsedEvent
+                .asJsonStructure()
+                .asJsonObject()
+                .getJsonArray("records")
+                .getValuesAs(
+                        jsonValue -> new EventImpl(
+                                jsonValue.asJsonObject().toString(),
+                                parsedEvent.partitionContext(),
+                                parsedEvent.properties(),
+                                parsedEvent.systemProperties(),
+                                parsedEvent.enqueuedTime(),
+                                parsedEvent.offset()
+                        ).parsedEvent()
+                );
     }
 }
