@@ -1,5 +1,6 @@
 {
   "defaultPluginFactoryClass": "com.teragrep.akv_01.plugin.Plugin",
+  "exceptionPluginFactoryClass": "com.teragrep.akv_01.plugin.ExceptionPlugin",
   "resourceIds": [
     {
       "resourceId": "123",

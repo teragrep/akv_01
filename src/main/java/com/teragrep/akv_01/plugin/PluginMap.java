@@ -121,6 +121,7 @@ public final class PluginMap {
         }
 
         assertType(mainObject, "defaultPluginFactoryClass", JsonValue.ValueType.STRING);
+        assertType(mainObject, "exceptionPluginFactoryClass", JsonValue.ValueType.STRING);
 
         assertType(mainObject, "resourceIds", JsonValue.ValueType.ARRAY);
         final JsonArray resourceIdPlugins = mainObject.getJsonArray("resourceIds");
@@ -158,9 +159,9 @@ public final class PluginMap {
     }
 
     /**
-     * Returns the default plugin class name.
+     * Returns the default pluginFactory class name.
      * 
-     * @return default plugin class name
+     * @return default pluginFactory class name
      */
     public String defaultPluginFactoryClassName() {
         assertType("in top-level structure", json, JsonValue.ValueType.OBJECT);
@@ -172,6 +173,22 @@ public final class PluginMap {
 
         assertType(mainObject, "defaultPluginFactoryClass", JsonValue.ValueType.STRING);
         return mainObject.getString("defaultPluginFactoryClass");
+    }
+
+    /**
+     * Returns the exception pluginFactory class name.
+     * @return exception pluginFactory class name
+     */
+    public String exceptionPluginFactoryClassName() {
+        assertType("in top-level structure", json, JsonValue.ValueType.OBJECT);
+        final JsonObject mainObject = json.asJsonObject();
+
+        if (mainObject.isEmpty()) {
+            throw new JsonException("Expected top-level structure to be a non-empty object");
+        }
+
+        assertType(mainObject, "exceptionPluginFactoryClass", JsonValue.ValueType.STRING);
+        return mainObject.getString("exceptionPluginFactoryClass");
     }
 
     @Override

@@ -88,12 +88,14 @@ public class PluginMapTest {
         JsonStructure jsonStructure = Json
                 .createObjectBuilder()
                 .add("defaultPluginFactoryClass", "com.teragrep.akv_01.PluginImpl")
+                .add("exceptionPluginFactoryClass", "com.teragrep.akv_01.ExceptionPlugin")
                 .add("resourceIds", Json.createArrayBuilder().add(Json.createObjectBuilder().add("resourceId", "id").add("pluginFactoryClass", "class").add("pluginFactoryConfig", "/src/test/resources/class.json"))).build();
         PluginMap pluginMap = new PluginMap(jsonStructure);
         final Map<String, PluginFactoryConfig> map = Assertions.assertDoesNotThrow(pluginMap::asUnmodifiableMap);
         Assertions.assertEquals("class", map.get("id").pluginFactoryClassName());
         Assertions.assertEquals("/src/test/resources/class.json", map.get("id").configPath());
         Assertions.assertEquals("com.teragrep.akv_01.PluginImpl", pluginMap.defaultPluginFactoryClassName());
+        Assertions.assertEquals("com.teragrep.akv_01.ExceptionPlugin", pluginMap.exceptionPluginFactoryClassName());
     }
 
     @Test
