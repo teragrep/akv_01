@@ -177,6 +177,7 @@ public final class PluginMap {
 
     /**
      * Returns the exception pluginFactory class name.
+     * 
      * @return exception pluginFactory class name
      */
     public String exceptionPluginFactoryClassName() {
