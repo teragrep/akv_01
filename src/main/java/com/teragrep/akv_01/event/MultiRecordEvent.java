@@ -70,8 +70,12 @@ public final class MultiRecordEvent {
         }
 
         if (
-            valid && (!parsedEvent.asJsonStructure().asJsonObject().containsKey("records")
-                    || !parsedEvent.asJsonStructure().asJsonObject().get("records").getValueType().equals(JsonValue.ValueType.ARRAY))
+            valid && (!parsedEvent.asJsonStructure().asJsonObject().containsKey("records") || !parsedEvent
+                    .asJsonStructure()
+                    .asJsonObject()
+                    .get("records")
+                    .getValueType()
+                    .equals(JsonValue.ValueType.ARRAY))
         ) {
             // no records array
             valid = false;
