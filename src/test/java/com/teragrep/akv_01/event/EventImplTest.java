@@ -68,7 +68,7 @@ public final class EventImplTest {
         ParsedEvent parsed = impl.parsedEvent();
         Assertions.assertFalse(parsed.isJsonStructure());
         Assertions.assertThrows(UnsupportedOperationException.class, parsed::asJsonStructure);
-        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().toString());
+        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().zonedDateTime().toString());
     }
 
     @Test
@@ -87,7 +87,7 @@ public final class EventImplTest {
         Assertions.assertTrue(jsonStructure.asJsonObject().containsKey("resourceId"));
         Assertions.assertEquals("12345", jsonStructure.asJsonObject().getString("resourceId"));
         Assertions.assertEquals("12345", parsed.resourceId());
-        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().toString());
+        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().zonedDateTime().toString());
 
     }
 

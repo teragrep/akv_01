@@ -45,7 +45,11 @@
  */
 package com.teragrep.akv_01.event;
 
-import jakarta.json.*;
+import com.teragrep.akv_01.time.EnqueuedTime;
+import com.teragrep.akv_01.time.EnqueuedTimeImpl;
+import jakarta.json.Json;
+import jakarta.json.JsonReader;
+import jakarta.json.JsonStructure;
 import jakarta.json.stream.JsonParsingException;
 
 import java.io.StringReader;
@@ -58,7 +62,7 @@ public final class EventImpl implements Event {
     private final Map<String, Object> partitionCtx;
     private final Map<String, Object> properties;
     private final Map<String, Object> systemProperties;
-    private final Object enqueuedTimeUtc;
+    private final EnqueuedTime enqueuedTimeUtc;
     private final String offset;
 
     public EventImpl(
@@ -67,6 +71,17 @@ public final class EventImpl implements Event {
             final Map<String, Object> properties,
             final Map<String, Object> systemProperties,
             final Object enqueuedTimeUtc,
+            final String offset
+    ) {
+        this(payload, partitionCtx, properties, systemProperties, new EnqueuedTimeImpl(enqueuedTimeUtc), offset);
+    }
+
+    public EventImpl(
+            final String payload,
+            final Map<String, Object> partitionCtx,
+            final Map<String, Object> properties,
+            final Map<String, Object> systemProperties,
+            final EnqueuedTime enqueuedTimeUtc,
             final String offset
     ) {
         this.payload = payload;
@@ -112,7 +127,7 @@ public final class EventImpl implements Event {
         return systemProperties;
     }
 
-    public Object enqueuedTimeUtc() {
+    public EnqueuedTime enqueuedTimeUtc() {
         return enqueuedTimeUtc;
     }
 

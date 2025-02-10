@@ -49,6 +49,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 public final class PlainEventTest {
@@ -61,12 +62,13 @@ public final class PlainEventTest {
                         new HashMap<>(),
                         new HashMap<>(),
                         new HashMap<>(),
-                        "2010-01-01T00:00Z",
+                        "2010-01-01T00:00",
                         "0"
                 )
         );
         Assertions.assertEquals("non-json payload", event.asString());
         Assertions.assertFalse(event.isJsonStructure());
+        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTime().zonedDateTime());
         Assertions.assertThrows(UnsupportedOperationException.class, event::asJsonStructure);
     }
 

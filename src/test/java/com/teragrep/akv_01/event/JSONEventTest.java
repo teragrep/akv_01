@@ -51,6 +51,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 
 public final class JSONEventTest {
@@ -64,7 +65,7 @@ public final class JSONEventTest {
                         new HashMap<>(),
                         new HashMap<>(),
                         new HashMap<>(),
-                        "2010-01-01T00:00Z",
+                        "2010-01-01T00:00",
                         "0"
                 ),
                 json
@@ -72,6 +73,7 @@ public final class JSONEventTest {
         Assertions.assertEquals(json.toString(), event.asString());
         Assertions.assertEquals("123", event.resourceId());
         Assertions.assertEquals(json, event.asJsonStructure());
+        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTime().zonedDateTime());
         Assertions.assertTrue(event.isJsonStructure());
     }
 

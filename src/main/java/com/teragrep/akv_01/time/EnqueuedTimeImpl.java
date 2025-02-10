@@ -43,57 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.event;
+package com.teragrep.akv_01.time;
 
-import com.teragrep.akv_01.time.EnqueuedTime;
-import jakarta.json.JsonStructure;
+import java.time.ZonedDateTime;
 
-import java.util.Map;
+public final class EnqueuedTimeImpl implements EnqueuedTime {
 
-public final class ParsedEventStub implements ParsedEvent {
+    private final Object origin;
 
-    @Override
-    public JsonStructure asJsonStructure() {
-        throw new UnsupportedOperationException("Stub object");
+    public EnqueuedTimeImpl(final Object origin) {
+        this.origin = origin;
     }
 
     @Override
-    public boolean isJsonStructure() {
-        throw new UnsupportedOperationException("Stub object");
+    public ZonedDateTime zonedDateTime() {
+        return ZonedDateTime.parse(origin.toString() + "Z");
     }
 
     @Override
-    public String asString() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public String resourceId() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> partitionContext() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> properties() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> systemProperties() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public EnqueuedTime enqueuedTime() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public String offset() {
-        throw new UnsupportedOperationException("Stub object");
+    public String toString() {
+        return String.valueOf(origin);
     }
 }

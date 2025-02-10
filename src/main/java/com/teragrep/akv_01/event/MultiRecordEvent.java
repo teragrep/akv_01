@@ -45,55 +45,63 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.time.EnqueuedTime;
-import jakarta.json.JsonStructure;
+import jakarta.json.JsonValue;
 
-import java.util.Map;
+import java.util.List;
 
-public final class ParsedEventStub implements ParsedEvent {
+public final class MultiRecordEvent {
 
-    @Override
-    public JsonStructure asJsonStructure() {
-        throw new UnsupportedOperationException("Stub object");
+    private final ParsedEvent parsedEvent;
+
+    public MultiRecordEvent(final ParsedEvent parsedEvent) {
+        this.parsedEvent = parsedEvent;
     }
 
-    @Override
-    public boolean isJsonStructure() {
-        throw new UnsupportedOperationException("Stub object");
+    public boolean isValid() {
+        boolean valid = true;
+        if (!parsedEvent.isJsonStructure()) {
+            // not json structure
+            valid = false;
+        }
+
+        if (valid && !parsedEvent.asJsonStructure().getValueType().equals(JsonValue.ValueType.OBJECT)) {
+            // not json object
+            valid = false;
+        }
+
+        if (
+            valid && (!parsedEvent.asJsonStructure().asJsonObject().containsKey("records") || !parsedEvent
+                    .asJsonStructure()
+                    .asJsonObject()
+                    .get("records")
+                    .getValueType()
+                    .equals(JsonValue.ValueType.ARRAY))
+        ) {
+            // no records array
+            valid = false;
+        }
+
+        return valid;
     }
 
-    @Override
-    public String asString() {
-        throw new UnsupportedOperationException("Stub object");
-    }
+    public List<ParsedEvent> records() {
+        if (!isValid()) {
+            throw new IllegalStateException("Event is not a multi record event");
+        }
 
-    @Override
-    public String resourceId() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> partitionContext() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> properties() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> systemProperties() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public EnqueuedTime enqueuedTime() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public String offset() {
-        throw new UnsupportedOperationException("Stub object");
+        return parsedEvent
+                .asJsonStructure()
+                .asJsonObject()
+                .getJsonArray("records")
+                .getValuesAs(
+                        jsonValue -> new EventImpl(
+                                jsonValue.asJsonObject().toString(),
+                                parsedEvent.partitionContext(),
+                                parsedEvent.properties(),
+                                parsedEvent.systemProperties(),
+                                parsedEvent.enqueuedTime(),
+                                parsedEvent.offset()
+                        ).parsedEvent()
+                );
     }
 }

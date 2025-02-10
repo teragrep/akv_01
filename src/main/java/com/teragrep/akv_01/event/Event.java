@@ -45,6 +45,8 @@
  */
 package com.teragrep.akv_01.event;
 
+import com.teragrep.akv_01.time.EnqueuedTime;
+
 import java.util.Map;
 
 public interface Event {
@@ -59,7 +61,7 @@ public interface Event {
 
     public abstract Map<String, Object> systemProperties();
 
-    public abstract Object enqueuedTimeUtc();
+    public abstract EnqueuedTime enqueuedTimeUtc();
 
     public abstract String offset();
 }
