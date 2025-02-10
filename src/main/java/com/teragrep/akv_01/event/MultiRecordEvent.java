@@ -60,27 +60,26 @@ public final class MultiRecordEvent {
     }
 
     public boolean isValid() {
+        boolean valid = true;
         if (!parsedEvent.isJsonStructure()) {
             // not json structure
-            return false;
+            valid = false;
         }
 
-        final JsonStructure mainStructure = parsedEvent.asJsonStructure();
-        if (!mainStructure.getValueType().equals(JsonValue.ValueType.OBJECT)) {
+        if (valid && !parsedEvent.asJsonStructure().getValueType().equals(JsonValue.ValueType.OBJECT)) {
             // not json object
-            return false;
+            valid = false;
         }
 
-        final JsonObject mainObject = mainStructure.asJsonObject();
         if (
-            !mainObject.containsKey("records")
-                    || !mainObject.get("records").getValueType().equals(JsonValue.ValueType.ARRAY)
+            valid && (!parsedEvent.asJsonStructure().asJsonObject().containsKey("records")
+                    || !parsedEvent.asJsonStructure().asJsonObject().get("records").getValueType().equals(JsonValue.ValueType.ARRAY))
         ) {
             // no records array
-            return false;
+            valid = false;
         }
 
-        return true;
+        return valid;
     }
 
     public List<ParsedEvent> records() {
