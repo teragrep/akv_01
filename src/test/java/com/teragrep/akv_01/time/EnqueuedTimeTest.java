@@ -43,58 +43,37 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.event;
+package com.teragrep.akv_01.time;
 
-import com.teragrep.akv_01.Parseable;
-import jakarta.json.JsonStructure;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
-import java.util.Map;
+import java.time.format.DateTimeParseException;
 
-public final class ParsedEventStub implements ParsedEvent {
+public final class EnqueuedTimeTest {
 
-    @Override
-    public JsonStructure asJsonStructure() {
-        throw new UnsupportedOperationException("Stub object");
+    @Test
+    void testExpectedCase() {
+        final String origin = "2010-01-01T00:00";
+        final EnqueuedTime enqueuedTime = new EnqueuedTime(origin);
+        Assertions.assertEquals(origin, enqueuedTime.toString());
+        Assertions.assertEquals(ZonedDateTime.parse(origin + "Z"), enqueuedTime.parsed());
     }
 
-    @Override
-    public boolean isJsonStructure() {
-        throw new UnsupportedOperationException("Stub object");
+    @Test
+    void testWithZSuffix() {
+        final String origin = "2010-01-01T00:00Z";
+        final EnqueuedTime enqueuedTime = new EnqueuedTime(origin);
+        Assertions.assertEquals(origin, enqueuedTime.toString());
+        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::parsed);
     }
 
-    @Override
-    public String asString() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public String resourceId() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> partitionContext() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> properties() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Map<String, Object> systemProperties() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public Parseable<ZonedDateTime> enqueuedTime() {
-        throw new UnsupportedOperationException("Stub object");
-    }
-
-    @Override
-    public String offset() {
-        throw new UnsupportedOperationException("Stub object");
+    @Test
+    void testUnexpectedFormatCase() {
+        final String origin = "01-01-2010T00:00";
+        final EnqueuedTime enqueuedTime = new EnqueuedTime(origin);
+        Assertions.assertEquals(origin, enqueuedTime.toString());
+        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::parsed);
     }
 }

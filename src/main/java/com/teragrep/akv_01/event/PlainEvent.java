@@ -45,6 +45,7 @@
  */
 package com.teragrep.akv_01.event;
 
+import com.teragrep.akv_01.Parseable;
 import jakarta.json.JsonStructure;
 
 import java.time.ZonedDateTime;
@@ -97,12 +98,8 @@ public final class PlainEvent implements ParsedEvent {
     }
 
     @Override
-    public ZonedDateTime enqueuedTime() {
-        String enqueuedTimeString = String.valueOf(event.enqueuedTimeUtc());
-        if (!enqueuedTimeString.endsWith("Z")) {
-            enqueuedTimeString += "Z";
-        }
-        return ZonedDateTime.parse(enqueuedTimeString);
+    public Parseable<ZonedDateTime> enqueuedTime() {
+        return event.enqueuedTimeUtc();
     }
 
     @Override

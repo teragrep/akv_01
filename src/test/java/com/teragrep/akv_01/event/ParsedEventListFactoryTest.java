@@ -87,10 +87,12 @@ public final class ParsedEventListFactoryTest {
         Assertions.assertEquals(JSONEvent.class, events.get(0).getClass());
         Assertions.assertEquals(PlainEvent.class, events.get(1).getClass());
         Assertions.assertEquals(JSONEvent.class, events.get(2).getClass());
-        Assertions.assertEquals(ZonedDateTime.of(2010, 1, 1, 0, 0, 0, 0, ZoneId.of("Z")), events.get(0).enqueuedTime());
-        Assertions.assertEquals(ZonedDateTime.of(2020, 1, 1, 1, 2, 3, 0, ZoneId.of("Z")), events.get(1).enqueuedTime());
         Assertions
-                .assertEquals(ZonedDateTime.of(2030, 4, 7, 12, 34, 10, 0, ZoneId.of("Z")), events.get(2).enqueuedTime());
+                .assertEquals(ZonedDateTime.of(2010, 1, 1, 0, 0, 0, 0, ZoneId.of("Z")), events.get(0).enqueuedTime().parsed());
+        Assertions
+                .assertEquals(ZonedDateTime.of(2020, 1, 1, 1, 2, 3, 0, ZoneId.of("Z")), events.get(1).enqueuedTime().parsed());
+        Assertions
+                .assertEquals(ZonedDateTime.of(2030, 4, 7, 12, 34, 10, 0, ZoneId.of("Z")), events.get(2).enqueuedTime().parsed());
         Assertions.assertEquals("123", events.get(0).resourceId());
         Assertions.assertThrows(UnsupportedOperationException.class, events.get(1)::resourceId);
         Assertions.assertEquals("123", events.get(2).resourceId());

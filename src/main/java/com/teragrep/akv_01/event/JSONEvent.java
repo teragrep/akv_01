@@ -45,6 +45,7 @@
  */
 package com.teragrep.akv_01.event;
 
+import com.teragrep.akv_01.Parseable;
 import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;
@@ -119,12 +120,8 @@ public final class JSONEvent implements ParsedEvent {
     }
 
     @Override
-    public ZonedDateTime enqueuedTime() {
-        String enqueuedTimeString = String.valueOf(event.enqueuedTimeUtc());
-        if (!enqueuedTimeString.endsWith("Z")) {
-            enqueuedTimeString += "Z";
-        }
-        return ZonedDateTime.parse(enqueuedTimeString);
+    public Parseable<ZonedDateTime> enqueuedTime() {
+        return event.enqueuedTimeUtc();
     }
 
     @Override
