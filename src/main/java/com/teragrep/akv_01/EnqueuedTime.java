@@ -45,7 +45,9 @@
  */
 package com.teragrep.akv_01;
 
-public interface Parseable<T> {
+import java.time.ZonedDateTime;
 
-    public abstract T parsed();
+public interface EnqueuedTime {
+
+    public abstract ZonedDateTime parsed();
 }

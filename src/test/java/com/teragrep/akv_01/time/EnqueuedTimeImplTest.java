@@ -45,25 +45,35 @@
  */
 package com.teragrep.akv_01.time;
 
-import com.teragrep.akv_01.Parseable;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 
-public final class EnqueuedTime implements Parseable<ZonedDateTime> {
+public final class EnqueuedTimeImplTest {
 
-    private final Object origin;
-
-    public EnqueuedTime(final Object origin) {
-        this.origin = origin;
+    @Test
+    void testExpectedCase() {
+        final String origin = "2010-01-01T00:00";
+        final EnqueuedTimeImpl enqueuedTime = new EnqueuedTimeImpl(origin);
+        Assertions.assertEquals(origin, enqueuedTime.toString());
+        Assertions.assertEquals(ZonedDateTime.parse(origin + "Z"), enqueuedTime.parsed());
     }
 
-    @Override
-    public ZonedDateTime parsed() {
-        return ZonedDateTime.parse(origin.toString() + "Z");
+    @Test
+    void testWithZSuffix() {
+        final String origin = "2010-01-01T00:00Z";
+        final EnqueuedTimeImpl enqueuedTime = new EnqueuedTimeImpl(origin);
+        Assertions.assertEquals(origin, enqueuedTime.toString());
+        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::parsed);
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(origin);
+    @Test
+    void testUnexpectedFormatCase() {
+        final String origin = "01-01-2010T00:00";
+        final EnqueuedTimeImpl enqueuedTime = new EnqueuedTimeImpl(origin);
+        Assertions.assertEquals(origin, enqueuedTime.toString());
+        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::parsed);
     }
 }

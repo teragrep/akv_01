@@ -45,13 +45,12 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.Parseable;
+import com.teragrep.akv_01.EnqueuedTime;
 import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Objects;
 
@@ -120,7 +119,7 @@ public final class JSONEvent implements ParsedEvent {
     }
 
     @Override
-    public Parseable<ZonedDateTime> enqueuedTime() {
+    public EnqueuedTime enqueuedTime() {
         return event.enqueuedTimeUtc();
     }
 

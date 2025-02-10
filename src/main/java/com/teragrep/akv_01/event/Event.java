@@ -45,9 +45,8 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.Parseable;
+import com.teragrep.akv_01.EnqueuedTime;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 public interface Event {
@@ -62,7 +61,7 @@ public interface Event {
 
     public abstract Map<String, Object> systemProperties();
 
-    public abstract Parseable<ZonedDateTime> enqueuedTimeUtc();
+    public abstract EnqueuedTime enqueuedTimeUtc();
 
     public abstract String offset();
 }

@@ -45,10 +45,9 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.Parseable;
+import com.teragrep.akv_01.EnqueuedTime;
 import jakarta.json.JsonStructure;
 
-import java.time.ZonedDateTime;
 import java.util.Map;
 
 public final class ParsedEventStub implements ParsedEvent {
@@ -89,7 +88,7 @@ public final class ParsedEventStub implements ParsedEvent {
     }
 
     @Override
-    public Parseable<ZonedDateTime> enqueuedTime() {
+    public EnqueuedTime enqueuedTime() {
         throw new UnsupportedOperationException("Stub object");
     }
 
