@@ -120,7 +120,11 @@ public final class JSONEvent implements ParsedEvent {
 
     @Override
     public ZonedDateTime enqueuedTime() {
-        return event.enqueuedTimeUtc();
+        String enqueuedTimeString = String.valueOf(event.enqueuedTimeUtc());
+        if (!enqueuedTimeString.endsWith("Z")) {
+            enqueuedTimeString += "Z";
+        }
+        return ZonedDateTime.parse(enqueuedTimeString);
     }
 
     @Override

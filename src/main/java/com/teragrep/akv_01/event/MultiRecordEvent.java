@@ -45,8 +45,6 @@
  */
 package com.teragrep.akv_01.event;
 
-import jakarta.json.JsonObject;
-import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
 
 import java.util.List;
