@@ -68,7 +68,7 @@ public final class PlainEventTest {
         );
         Assertions.assertEquals("non-json payload", event.asString());
         Assertions.assertFalse(event.isJsonStructure());
-        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTime().parsed());
+        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTime().zonedDateTime());
         Assertions.assertThrows(UnsupportedOperationException.class, event::asJsonStructure);
     }
 

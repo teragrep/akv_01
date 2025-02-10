@@ -45,7 +45,7 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.EnqueuedTime;
+import com.teragrep.akv_01.time.EnqueuedTime;
 import jakarta.json.JsonStructure;
 
 import java.util.Map;

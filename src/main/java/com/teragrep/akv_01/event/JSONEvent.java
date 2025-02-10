@@ -45,7 +45,7 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.EnqueuedTime;
+import com.teragrep.akv_01.time.EnqueuedTime;
 import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;

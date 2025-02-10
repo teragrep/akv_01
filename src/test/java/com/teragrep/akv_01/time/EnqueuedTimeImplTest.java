@@ -58,7 +58,7 @@ public final class EnqueuedTimeImplTest {
         final String origin = "2010-01-01T00:00";
         final EnqueuedTimeImpl enqueuedTime = new EnqueuedTimeImpl(origin);
         Assertions.assertEquals(origin, enqueuedTime.toString());
-        Assertions.assertEquals(ZonedDateTime.parse(origin + "Z"), enqueuedTime.parsed());
+        Assertions.assertEquals(ZonedDateTime.parse(origin + "Z"), enqueuedTime.zonedDateTime());
     }
 
     @Test
@@ -66,7 +66,7 @@ public final class EnqueuedTimeImplTest {
         final String origin = "2010-01-01T00:00Z";
         final EnqueuedTimeImpl enqueuedTime = new EnqueuedTimeImpl(origin);
         Assertions.assertEquals(origin, enqueuedTime.toString());
-        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::parsed);
+        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::zonedDateTime);
     }
 
     @Test
@@ -74,6 +74,6 @@ public final class EnqueuedTimeImplTest {
         final String origin = "01-01-2010T00:00";
         final EnqueuedTimeImpl enqueuedTime = new EnqueuedTimeImpl(origin);
         Assertions.assertEquals(origin, enqueuedTime.toString());
-        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::parsed);
+        Assertions.assertThrows(DateTimeParseException.class, enqueuedTime::zonedDateTime);
     }
 }

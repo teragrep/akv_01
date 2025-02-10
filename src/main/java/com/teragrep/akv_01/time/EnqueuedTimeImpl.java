@@ -45,8 +45,6 @@
  */
 package com.teragrep.akv_01.time;
 
-import com.teragrep.akv_01.EnqueuedTime;
-
 import java.time.ZonedDateTime;
 
 public final class EnqueuedTimeImpl implements EnqueuedTime {
@@ -58,7 +56,7 @@ public final class EnqueuedTimeImpl implements EnqueuedTime {
     }
 
     @Override
-    public ZonedDateTime parsed() {
+    public ZonedDateTime zonedDateTime() {
         return ZonedDateTime.parse(origin.toString() + "Z");
     }
 

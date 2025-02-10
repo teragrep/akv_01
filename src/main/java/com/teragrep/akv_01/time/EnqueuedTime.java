@@ -43,11 +43,11 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01;
+package com.teragrep.akv_01.time;
 
 import java.time.ZonedDateTime;
 
 public interface EnqueuedTime {
 
-    public abstract ZonedDateTime parsed();
+    public abstract ZonedDateTime zonedDateTime();
 }
