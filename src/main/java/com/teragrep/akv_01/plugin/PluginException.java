@@ -47,7 +47,18 @@ package com.teragrep.akv_01.plugin;
 
 public final class PluginException extends Exception {
 
-    public PluginException(final Throwable cause) {
+    public PluginException() {
+    }
+
+    public PluginException(String message) {
+        super(message);
+    }
+
+    public PluginException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PluginException(Throwable cause) {
         super(cause);
     }
 }
