@@ -1,5 +1,5 @@
 /*
- * Key Value Mapping for Microsoft Azure EventHub
+ * Teragrep Key Value Mapping for Microsoft Azure EventHub
  * Copyright (C) 2024 Suomen Kanuuna Oy
  *
  * This program is free software: you can redistribute it and/or modify
