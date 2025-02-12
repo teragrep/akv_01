@@ -52,5 +52,5 @@ import java.util.List;
 
 public interface Plugin {
 
-    public abstract List<SyslogMessage> syslogMessage(ParsedEvent parsedEvent);
+    public abstract List<SyslogMessage> syslogMessage(ParsedEvent parsedEvent) throws PluginException;
 }
