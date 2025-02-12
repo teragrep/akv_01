@@ -45,15 +45,20 @@
  */
 package com.teragrep.akv_01.plugin;
 
-import com.teragrep.akv_01.event.ParsedEvent;
-import com.teragrep.rlo_14.SyslogMessage;
+public final class PluginException extends Exception {
 
-import java.util.List;
+    public PluginException() {
+    }
 
-public final class PluginStub implements Plugin {
+    public PluginException(String message) {
+        super(message);
+    }
 
-    @Override
-    public List<SyslogMessage> syslogMessage(final ParsedEvent parsedEvent) throws PluginException {
-        throw new PluginException(new UnsupportedOperationException("Stub object does not implement any methods"));
+    public PluginException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public PluginException(Throwable cause) {
+        super(cause);
     }
 }
