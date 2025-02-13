@@ -6,7 +6,7 @@
   <version>${revision}${sha1}${changelist}</version>
   <packaging>jar</packaging>
   <name>akv_01</name>
-  <description>Key Value Mapping for Microsoft Azure EventHub</description>
+  <description>Teragrep Key Value Mapping for Microsoft Azure EventHub</description>
   <url>https://teragrep.com</url>
   <licenses>
     <license>
@@ -254,7 +254,7 @@
                   <owner>Suomen Kanuuna Oy</owner>
                   <start>2024</start>
                 </copyright>
-                <text>Key Value Mapping for Microsoft Azure EventHub</text>
+                <text>Teragrep Key Value Mapping for Microsoft Azure EventHub</text>
               </all>
               <family>Teragrep</family>
             </license>

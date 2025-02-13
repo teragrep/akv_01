@@ -3,7 +3,7 @@
 // 2. Update the issues link in Contributing section in the readme file
 // 3. Update the discussion link in config.yml file in .github/ISSUE_TEMPLATE directory
 
-= Key Value Mapping for Microsoft Azure EventHub (akv_01)
+= Teragrep Key Value Mapping for Microsoft Azure EventHub (akv_01)
 
 // Add a short description of your project. Tell what your project does and what it's used for.
 
