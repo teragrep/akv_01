@@ -57,7 +57,10 @@ public final class EnqueuedTimeImpl implements EnqueuedTime {
 
     @Override
     public ZonedDateTime zonedDateTime() {
-        return ZonedDateTime.parse(origin.toString() + "Z");
+        if (origin == null) {
+            throw new IllegalArgumentException("EnqueuedTime origin is null");
+        }
+        return ZonedDateTime.parse(origin + "Z");
     }
 
     @Override
