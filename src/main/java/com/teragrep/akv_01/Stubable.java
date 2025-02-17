@@ -43,35 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.time;
+package com.teragrep.akv_01;
 
-import com.teragrep.akv_01.Stubable;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+public interface Stubable {
 
-import java.time.ZonedDateTime;
-
-public final class EnqueuedTimeFactoryTest {
-
-    @Test
-    void createEnqueuedTime() {
-        final String time = "2010-01-01T00:00:00";
-        final EnqueuedTimeFactory factory = new EnqueuedTimeFactory(time);
-        final EnqueuedTime enqueuedTime = factory.enqueuedTime();
-        Assertions.assertEquals(EnqueuedTimeImpl.class, enqueuedTime.getClass());
-        Assertions.assertEquals(time, enqueuedTime.toString());
-        Assertions.assertEquals(ZonedDateTime.parse(time + "Z"), enqueuedTime.zonedDateTime());
-    }
-
-    @Test
-    void createStub() {
-        final String time = null;
-        final EnqueuedTimeFactory factory = new EnqueuedTimeFactory(time);
-        final EnqueuedTime enqueuedTime = factory.enqueuedTime();
-        Assertions.assertEquals(EnqueuedTimeStub.class, enqueuedTime.getClass());
-        Assertions.assertInstanceOf(Stubable.class, enqueuedTime);
-        final UnsupportedOperationException exception = Assertions
-                .assertThrows(UnsupportedOperationException.class, enqueuedTime::zonedDateTime);
-        Assertions.assertEquals("Stub object does not provide zonedDateTime", exception.getMessage());
-    }
+    public abstract boolean isStub();
 }
