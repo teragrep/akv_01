@@ -45,33 +45,24 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.event.metadata.offset.EventOffsetImpl;
-import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContextImpl;
-import com.teragrep.akv_01.event.metadata.properties.EventPropertiesImpl;
-import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemPropertiesImpl;
-import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import jakarta.json.JsonStructure;
+import jakarta.json.stream.JsonParsingException;
 
-import java.time.ZonedDateTime;
-import java.util.HashMap;
+public final class ParsedEventFactory {
 
-public final class PlainEventTest {
+    private final UnparsedEvent event;
 
-    @Test
-    void testInitialization() {
-        PlainEvent event = new PlainEvent(
-                new UnparsedEventImpl("non-json payload", new EventPartitionContextImpl(new HashMap<>()), new EventPropertiesImpl(new HashMap<>()), new EventSystemPropertiesImpl(new HashMap<>()), new EnqueuedTimeImpl("2010-01-01T00:00"), new EventOffsetImpl("0"))
-        );
-        Assertions.assertEquals("non-json payload", event.asString());
-        Assertions.assertFalse(event.isJsonStructure());
-        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTimeUtc().zonedDateTime());
-        Assertions.assertThrows(UnsupportedOperationException.class, event::asJsonStructure);
+    public ParsedEventFactory(final UnparsedEvent event) {
+        this.event = event;
     }
 
-    @Test
-    void testEqualsContract() {
-        EqualsVerifier.forClass(PlainEvent.class).verify();
+    public ParsedEvent parsedEvent() {
+        try {
+            final JsonStructure jsonStructure = event.parseJson();
+            return new JSONEvent(event, jsonStructure);
+        }
+        catch (final JsonParsingException ignored) {
+            return new PlainEvent(event);
+        }
     }
 }

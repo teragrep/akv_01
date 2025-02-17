@@ -45,73 +45,45 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.time.EnqueuedTime;
-import com.teragrep.akv_01.time.EnqueuedTimeFactory;
-import com.teragrep.akv_01.time.EnqueuedTimeStub;
+import com.teragrep.akv_01.event.metadata.offset.EventOffset;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContext;
+import com.teragrep.akv_01.event.metadata.properties.EventProperties;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemProperties;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
 import jakarta.json.Json;
 import jakarta.json.JsonReader;
 import jakarta.json.JsonStructure;
 import jakarta.json.stream.JsonParsingException;
 
 import java.io.StringReader;
-import java.util.Map;
 import java.util.Objects;
 
-public final class EventImpl implements Event {
+public final class UnparsedEventImpl implements UnparsedEvent {
 
     private final String payload;
-    private final Map<String, Object> partitionCtx;
-    private final Map<String, Object> properties;
-    private final Map<String, Object> systemProperties;
+    private final EventPartitionContext partitionCtx;
+    private final EventProperties eventProperties;
+    private final EventSystemProperties eventSystemProperties;
     private final EnqueuedTime enqueuedTimeUtc;
-    private final String offset;
+    private final EventOffset eventOffset;
 
-    public EventImpl(
+    public UnparsedEventImpl(
             final String payload,
-            final Map<String, Object> partitionCtx,
-            final Map<String, Object> properties,
-            final Map<String, Object> systemProperties,
-            final Object enqueuedTimeUtc,
-            final String offset
-    ) {
-        this(
-                payload,
-                partitionCtx,
-                properties,
-                systemProperties,
-                new EnqueuedTimeFactory(enqueuedTimeUtc).enqueuedTime(),
-                offset
-        );
-    }
-
-    public EventImpl(
-            final String payload,
-            final Map<String, Object> partitionCtx,
-            final Map<String, Object> properties,
-            final Map<String, Object> systemProperties,
+            final EventPartitionContext partitionCtx,
+            final EventProperties properties,
+            final EventSystemProperties systemProperties,
             final EnqueuedTime enqueuedTimeUtc,
-            final String offset
+            final EventOffset offset
     ) {
         this.payload = payload;
         this.partitionCtx = partitionCtx;
-        this.properties = properties;
-        this.systemProperties = systemProperties;
+        this.eventProperties = properties;
+        this.eventSystemProperties = systemProperties;
         this.enqueuedTimeUtc = enqueuedTimeUtc;
-        this.offset = offset;
+        this.eventOffset = offset;
     }
 
-    @Override
-    public ParsedEvent parsedEvent() {
-        try {
-            final JsonStructure jsonStructure = parseJson();
-            return new JSONEvent(this, jsonStructure);
-        }
-        catch (final JsonParsingException ignored) {
-            return new PlainEvent(this);
-        }
-    }
-
-    private JsonStructure parseJson() throws JsonParsingException {
+    public JsonStructure parseJson() throws JsonParsingException {
         try (
                 final StringReader stringReader = new StringReader(payload); final JsonReader jsonReader = Json.createReader(stringReader)
         ) {
@@ -123,28 +95,24 @@ public final class EventImpl implements Event {
         return payload;
     }
 
-    public Map<String, Object> partitionCtx() {
+    public EventPartitionContext partitionCtx() {
         return partitionCtx;
     }
 
-    public Map<String, Object> properties() {
-        return properties;
+    public EventProperties properties() {
+        return eventProperties;
     }
 
-    public Map<String, Object> systemProperties() {
-        return systemProperties;
+    public EventSystemProperties systemProperties() {
+        return eventSystemProperties;
     }
 
     public EnqueuedTime enqueuedTimeUtc() {
-        // If ctor with EnqueuedTime type is provided with null:
-        if (enqueuedTimeUtc == null) {
-            return new EnqueuedTimeStub();
-        }
         return enqueuedTimeUtc;
     }
 
-    public String offset() {
-        return offset;
+    public EventOffset offset() {
+        return eventOffset;
     }
 
     @Override
@@ -152,14 +120,14 @@ public final class EventImpl implements Event {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        EventImpl event = (EventImpl) o;
-        return Objects.equals(payload, event.payload) && Objects.equals(partitionCtx, event.partitionCtx) && Objects
-                .equals(properties, event.properties) && Objects.equals(systemProperties, event.systemProperties)
-                && Objects.equals(enqueuedTimeUtc, event.enqueuedTimeUtc) && Objects.equals(offset, event.offset);
+        UnparsedEventImpl event = (UnparsedEventImpl) o;
+        return Objects.equals(payload, event.payload) && Objects.equals(partitionCtx, event.partitionCtx)
+                && Objects.equals(eventProperties, event.eventProperties) && Objects.equals(eventSystemProperties, event.eventSystemProperties) && Objects.equals(enqueuedTimeUtc, event.enqueuedTimeUtc) && Objects.equals(eventOffset, event.eventOffset);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(payload, partitionCtx, properties, systemProperties, enqueuedTimeUtc, offset);
+        return Objects
+                .hash(payload, partitionCtx, eventProperties, eventSystemProperties, enqueuedTimeUtc, eventOffset);
     }
 }

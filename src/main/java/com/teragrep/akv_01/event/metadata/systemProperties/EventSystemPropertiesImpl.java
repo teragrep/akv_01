@@ -43,13 +43,25 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.time;
+package com.teragrep.akv_01.event.metadata.systemProperties;
 
-import com.teragrep.akv_01.Stubable;
+import java.util.Map;
 
-import java.time.ZonedDateTime;
+public final class EventSystemPropertiesImpl implements EventSystemProperties {
 
-public interface EnqueuedTime extends Stubable {
+    private final Map<String, Object> systemPropertiesMap;
 
-    public abstract ZonedDateTime zonedDateTime();
+    public EventSystemPropertiesImpl(final Map<String, Object> systemPropertiesMap) {
+        this.systemPropertiesMap = systemPropertiesMap;
+    }
+
+    @Override
+    public Map<String, Object> asMap() {
+        return systemPropertiesMap;
+    }
+
+    @Override
+    public boolean isStub() {
+        return false;
+    }
 }

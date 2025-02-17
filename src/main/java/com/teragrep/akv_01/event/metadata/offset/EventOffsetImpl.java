@@ -43,35 +43,23 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.event;
+package com.teragrep.akv_01.event.metadata.offset;
 
-import com.teragrep.akv_01.event.metadata.offset.EventOffsetImpl;
-import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContextImpl;
-import com.teragrep.akv_01.event.metadata.properties.EventPropertiesImpl;
-import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemPropertiesImpl;
-import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
-import nl.jqno.equalsverifier.EqualsVerifier;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+public final class EventOffsetImpl implements EventOffset {
 
-import java.time.ZonedDateTime;
-import java.util.HashMap;
+    private final String offset;
 
-public final class PlainEventTest {
-
-    @Test
-    void testInitialization() {
-        PlainEvent event = new PlainEvent(
-                new UnparsedEventImpl("non-json payload", new EventPartitionContextImpl(new HashMap<>()), new EventPropertiesImpl(new HashMap<>()), new EventSystemPropertiesImpl(new HashMap<>()), new EnqueuedTimeImpl("2010-01-01T00:00"), new EventOffsetImpl("0"))
-        );
-        Assertions.assertEquals("non-json payload", event.asString());
-        Assertions.assertFalse(event.isJsonStructure());
-        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTimeUtc().zonedDateTime());
-        Assertions.assertThrows(UnsupportedOperationException.class, event::asJsonStructure);
+    public EventOffsetImpl(final String offset) {
+        this.offset = offset;
     }
 
-    @Test
-    void testEqualsContract() {
-        EqualsVerifier.forClass(PlainEvent.class).verify();
+    @Override
+    public String value() {
+        return offset;
+    }
+
+    @Override
+    public boolean isStub() {
+        return false;
     }
 }

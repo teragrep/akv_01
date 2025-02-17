@@ -45,23 +45,23 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.time.EnqueuedTime;
-
-import java.util.Map;
+import com.teragrep.akv_01.event.metadata.offset.EventOffset;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContext;
+import com.teragrep.akv_01.event.metadata.properties.EventProperties;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemProperties;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
 
 public interface Event {
 
-    public abstract ParsedEvent parsedEvent();
-
     public abstract String payload();
 
-    public abstract Map<String, Object> partitionCtx();
+    public abstract EventPartitionContext partitionCtx();
 
-    public abstract Map<String, Object> properties();
+    public abstract EventProperties properties();
 
-    public abstract Map<String, Object> systemProperties();
+    public abstract EventSystemProperties systemProperties();
 
     public abstract EnqueuedTime enqueuedTimeUtc();
 
-    public abstract String offset();
+    public abstract EventOffset offset();
 }

@@ -45,6 +45,11 @@
  */
 package com.teragrep.akv_01.event;
 
+import com.teragrep.akv_01.event.metadata.offset.EventOffsetImpl;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContextImpl;
+import com.teragrep.akv_01.event.metadata.properties.EventPropertiesImpl;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemPropertiesImpl;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
 import jakarta.json.Json;
 import jakarta.json.JsonStructure;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -60,20 +65,12 @@ public final class JSONEventTest {
     void testInitialization() {
         JsonStructure json = Json.createObjectBuilder().add("resourceId", "123").build();
         JSONEvent event = new JSONEvent(
-                new EventImpl(
-                        json.toString(),
-                        new HashMap<>(),
-                        new HashMap<>(),
-                        new HashMap<>(),
-                        "2010-01-01T00:00",
-                        "0"
-                ),
-                json
+                new UnparsedEventImpl(json.toString(), new EventPartitionContextImpl(new HashMap<>()), new EventPropertiesImpl(new HashMap<>()), new EventSystemPropertiesImpl(new HashMap<>()), new EnqueuedTimeImpl("2010-01-01T00:00"), new EventOffsetImpl("0")), json
         );
         Assertions.assertEquals(json.toString(), event.asString());
         Assertions.assertEquals("123", event.resourceId());
         Assertions.assertEquals(json, event.asJsonStructure());
-        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTime().zonedDateTime());
+        Assertions.assertEquals(ZonedDateTime.parse("2010-01-01T00:00Z"), event.enqueuedTimeUtc().zonedDateTime());
         Assertions.assertTrue(event.isJsonStructure());
     }
 

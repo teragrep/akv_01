@@ -43,19 +43,24 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.time;
+package com.teragrep.akv_01.event.metadata.time;
 
-import java.time.ZonedDateTime;
+public final class EnqueuedTimeFactory {
 
-public final class EnqueuedTimeStub implements EnqueuedTime {
+    private final Object origin;
 
-    @Override
-    public ZonedDateTime zonedDateTime() {
-        throw new UnsupportedOperationException("Stub object does not provide zonedDateTime");
+    public EnqueuedTimeFactory(final Object origin) {
+        this.origin = origin;
     }
 
-    @Override
-    public boolean isStub() {
-        return true;
+    public EnqueuedTime enqueuedTime() {
+        EnqueuedTime enqueuedTime;
+        if (origin == null) {
+            enqueuedTime = new EnqueuedTimeStub();
+        }
+        else {
+            enqueuedTime = new EnqueuedTimeImpl(origin);
+        }
+        return enqueuedTime;
     }
 }
