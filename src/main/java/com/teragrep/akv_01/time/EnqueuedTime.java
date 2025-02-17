@@ -50,4 +50,6 @@ import java.time.ZonedDateTime;
 public interface EnqueuedTime {
 
     public abstract ZonedDateTime zonedDateTime();
+
+    public abstract boolean isStub();
 }

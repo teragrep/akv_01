@@ -45,6 +45,7 @@
  */
 package com.teragrep.akv_01.event;
 
+import com.teragrep.akv_01.time.EnqueuedTime;
 import jakarta.json.JsonStructure;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
@@ -88,7 +89,38 @@ public final class EventImplTest {
         Assertions.assertEquals("12345", jsonStructure.asJsonObject().getString("resourceId"));
         Assertions.assertEquals("12345", parsed.resourceId());
         Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTime().zonedDateTime().toString());
+    }
 
+    @Test
+    void testWithNullEnqueuedTime_ObjectCtor() {
+        final String payload = "payload here";
+        final Map<String, Object> partitionContext = new HashMap<>();
+        final Map<String, Object> properties = new HashMap<>();
+        final Map<String, Object> systemProperties = new HashMap<>();
+        final Object enqueuedTimeUtc = null;
+        final String offset = "0";
+        Event impl = new EventImpl(payload, partitionContext, properties, systemProperties, enqueuedTimeUtc, offset);
+
+        ParsedEvent parsed = impl.parsedEvent();
+        Assertions.assertFalse(parsed.isJsonStructure());
+        Assertions.assertThrows(UnsupportedOperationException.class, parsed::asJsonStructure);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> parsed.enqueuedTime().zonedDateTime());
+    }
+
+    @Test
+    void testWithNullEnqueuedTime_EnqueuedTimeCtor() {
+        final String payload = "payload here";
+        final Map<String, Object> partitionContext = new HashMap<>();
+        final Map<String, Object> properties = new HashMap<>();
+        final Map<String, Object> systemProperties = new HashMap<>();
+        final EnqueuedTime enqueuedTimeUtc = null;
+        final String offset = "0";
+        Event impl = new EventImpl(payload, partitionContext, properties, systemProperties, enqueuedTimeUtc, offset);
+
+        ParsedEvent parsed = impl.parsedEvent();
+        Assertions.assertFalse(parsed.isJsonStructure());
+        Assertions.assertThrows(UnsupportedOperationException.class, parsed::asJsonStructure);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> parsed.enqueuedTime().zonedDateTime());
     }
 
     @Test

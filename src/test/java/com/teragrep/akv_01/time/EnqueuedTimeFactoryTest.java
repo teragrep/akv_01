@@ -45,31 +45,31 @@
  */
 package com.teragrep.akv_01.time;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.time.ZonedDateTime;
 
-public final class EnqueuedTimeImpl implements EnqueuedTime {
+public final class EnqueuedTimeFactoryTest {
 
-    private final Object origin;
-
-    public EnqueuedTimeImpl(final Object origin) {
-        this.origin = origin;
+    @Test
+    void createEnqueuedTime() {
+        final String time = "2010-01-01T00:00:00";
+        final EnqueuedTimeFactory factory = new EnqueuedTimeFactory(time);
+        final EnqueuedTime enqueuedTime = factory.enqueuedTime();
+        Assertions.assertEquals(EnqueuedTimeImpl.class, enqueuedTime.getClass());
+        Assertions.assertEquals(time, enqueuedTime.toString());
+        Assertions.assertEquals(ZonedDateTime.parse(time + "Z"), enqueuedTime.zonedDateTime());
     }
 
-    @Override
-    public ZonedDateTime zonedDateTime() {
-        if (origin == null) {
-            throw new IllegalArgumentException("EnqueuedTime origin is null");
-        }
-        return ZonedDateTime.parse(origin + "Z");
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(origin);
-    }
-
-    @Override
-    public boolean isStub() {
-        return false;
+    @Test
+    void createStub() {
+        final String time = null;
+        final EnqueuedTimeFactory factory = new EnqueuedTimeFactory(time);
+        final EnqueuedTime enqueuedTime = factory.enqueuedTime();
+        Assertions.assertEquals(EnqueuedTimeStub.class, enqueuedTime.getClass());
+        final UnsupportedOperationException exception = Assertions
+                .assertThrows(UnsupportedOperationException.class, enqueuedTime::zonedDateTime);
+        Assertions.assertEquals("Stub object does not provide zonedDateTime", exception.getMessage());
     }
 }
