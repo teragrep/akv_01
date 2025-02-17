@@ -47,29 +47,15 @@ package com.teragrep.akv_01.time;
 
 import java.time.ZonedDateTime;
 
-public final class EnqueuedTimeImpl implements EnqueuedTime {
-
-    private final Object origin;
-
-    public EnqueuedTimeImpl(final Object origin) {
-        this.origin = origin;
-    }
+public final class EnqueuedTimeStub implements EnqueuedTime {
 
     @Override
     public ZonedDateTime zonedDateTime() {
-        if (origin == null) {
-            throw new IllegalArgumentException("EnqueuedTime origin is null");
-        }
-        return ZonedDateTime.parse(origin + "Z");
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(origin);
+        throw new UnsupportedOperationException("Stub object does not provide zonedDateTime");
     }
 
     @Override
     public boolean isStub() {
-        return false;
+        return true;
     }
 }

@@ -46,7 +46,8 @@
 package com.teragrep.akv_01.event;
 
 import com.teragrep.akv_01.time.EnqueuedTime;
-import com.teragrep.akv_01.time.EnqueuedTimeImpl;
+import com.teragrep.akv_01.time.EnqueuedTimeFactory;
+import com.teragrep.akv_01.time.EnqueuedTimeStub;
 import jakarta.json.Json;
 import jakarta.json.JsonReader;
 import jakarta.json.JsonStructure;
@@ -73,7 +74,14 @@ public final class EventImpl implements Event {
             final Object enqueuedTimeUtc,
             final String offset
     ) {
-        this(payload, partitionCtx, properties, systemProperties, new EnqueuedTimeImpl(enqueuedTimeUtc), offset);
+        this(
+                payload,
+                partitionCtx,
+                properties,
+                systemProperties,
+                new EnqueuedTimeFactory(enqueuedTimeUtc).enqueuedTime(),
+                offset
+        );
     }
 
     public EventImpl(
@@ -128,6 +136,10 @@ public final class EventImpl implements Event {
     }
 
     public EnqueuedTime enqueuedTimeUtc() {
+        // If ctor with EnqueuedTime type is provided with null:
+        if (enqueuedTimeUtc == null) {
+            return new EnqueuedTimeStub();
+        }
         return enqueuedTimeUtc;
     }
 

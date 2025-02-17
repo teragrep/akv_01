@@ -45,9 +45,11 @@
  */
 package com.teragrep.akv_01.time;
 
+import com.teragrep.akv_01.Stubable;
+
 import java.time.ZonedDateTime;
 
-public interface EnqueuedTime {
+public interface EnqueuedTime extends Stubable {
 
     public abstract ZonedDateTime zonedDateTime();
 }

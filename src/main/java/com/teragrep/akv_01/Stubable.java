@@ -43,33 +43,9 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.time;
+package com.teragrep.akv_01;
 
-import java.time.ZonedDateTime;
+public interface Stubable {
 
-public final class EnqueuedTimeImpl implements EnqueuedTime {
-
-    private final Object origin;
-
-    public EnqueuedTimeImpl(final Object origin) {
-        this.origin = origin;
-    }
-
-    @Override
-    public ZonedDateTime zonedDateTime() {
-        if (origin == null) {
-            throw new IllegalArgumentException("EnqueuedTime origin is null");
-        }
-        return ZonedDateTime.parse(origin + "Z");
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(origin);
-    }
-
-    @Override
-    public boolean isStub() {
-        return false;
-    }
+    public abstract boolean isStub();
 }
