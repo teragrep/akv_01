@@ -45,13 +45,16 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.time.EnqueuedTime;
+import com.teragrep.akv_01.event.metadata.offset.EventOffset;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContext;
+import com.teragrep.akv_01.event.metadata.properties.EventProperties;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemProperties;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
 import jakarta.json.JsonException;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonStructure;
 import jakarta.json.JsonValue;
 
-import java.util.Map;
 import java.util.Objects;
 
 public final class JSONEvent implements ParsedEvent {
@@ -104,27 +107,32 @@ public final class JSONEvent implements ParsedEvent {
     }
 
     @Override
-    public Map<String, Object> partitionContext() {
+    public String payload() {
+        return event.payload();
+    }
+
+    @Override
+    public EventPartitionContext partitionCtx() {
         return event.partitionCtx();
     }
 
     @Override
-    public Map<String, Object> properties() {
+    public EventProperties properties() {
         return event.properties();
     }
 
     @Override
-    public Map<String, Object> systemProperties() {
+    public EventSystemProperties systemProperties() {
         return event.systemProperties();
     }
 
     @Override
-    public EnqueuedTime enqueuedTime() {
+    public EnqueuedTime enqueuedTimeUtc() {
         return event.enqueuedTimeUtc();
     }
 
     @Override
-    public String offset() {
+    public EventOffset offset() {
         return event.offset();
     }
 

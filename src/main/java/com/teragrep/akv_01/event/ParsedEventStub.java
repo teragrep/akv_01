@@ -45,10 +45,12 @@
  */
 package com.teragrep.akv_01.event;
 
-import com.teragrep.akv_01.time.EnqueuedTime;
+import com.teragrep.akv_01.event.metadata.offset.EventOffset;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContext;
+import com.teragrep.akv_01.event.metadata.properties.EventProperties;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemProperties;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
 import jakarta.json.JsonStructure;
-
-import java.util.Map;
 
 public final class ParsedEventStub implements ParsedEvent {
 
@@ -73,27 +75,32 @@ public final class ParsedEventStub implements ParsedEvent {
     }
 
     @Override
-    public Map<String, Object> partitionContext() {
+    public String payload() {
         throw new UnsupportedOperationException("Stub object");
     }
 
     @Override
-    public Map<String, Object> properties() {
+    public EventPartitionContext partitionCtx() {
         throw new UnsupportedOperationException("Stub object");
     }
 
     @Override
-    public Map<String, Object> systemProperties() {
+    public EventProperties properties() {
         throw new UnsupportedOperationException("Stub object");
     }
 
     @Override
-    public EnqueuedTime enqueuedTime() {
+    public EventSystemProperties systemProperties() {
         throw new UnsupportedOperationException("Stub object");
     }
 
     @Override
-    public String offset() {
+    public EnqueuedTime enqueuedTimeUtc() {
+        throw new UnsupportedOperationException("Stub object");
+    }
+
+    @Override
+    public EventOffset offset() {
         throw new UnsupportedOperationException("Stub object");
     }
 }

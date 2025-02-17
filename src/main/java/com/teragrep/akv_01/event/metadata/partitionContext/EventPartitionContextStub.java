@@ -43,33 +43,19 @@
  * Teragrep, the applicable Commercial License may apply to this file if you as
  * a licensee so wish it.
  */
-package com.teragrep.akv_01.time;
+package com.teragrep.akv_01.event.metadata.partitionContext;
 
-import java.time.ZonedDateTime;
+import java.util.Map;
 
-public final class EnqueuedTimeImpl implements EnqueuedTime {
-
-    private final Object origin;
-
-    public EnqueuedTimeImpl(final Object origin) {
-        this.origin = origin;
-    }
+public class EventPartitionContextStub implements EventPartitionContext {
 
     @Override
-    public ZonedDateTime zonedDateTime() {
-        if (origin == null) {
-            throw new IllegalArgumentException("EnqueuedTime origin is null");
-        }
-        return ZonedDateTime.parse(origin + "Z");
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(origin);
+    public Map<String, Object> asMap() {
+        throw new UnsupportedOperationException("Stub object does not implement asMap()");
     }
 
     @Override
     public boolean isStub() {
-        return false;
+        return true;
     }
 }

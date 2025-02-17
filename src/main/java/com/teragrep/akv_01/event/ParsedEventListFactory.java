@@ -45,6 +45,22 @@
  */
 package com.teragrep.akv_01.event;
 
+import com.teragrep.akv_01.event.metadata.offset.EventOffset;
+import com.teragrep.akv_01.event.metadata.offset.EventOffsetImpl;
+import com.teragrep.akv_01.event.metadata.offset.EventOffsetStub;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContext;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContextImpl;
+import com.teragrep.akv_01.event.metadata.partitionContext.EventPartitionContextStub;
+import com.teragrep.akv_01.event.metadata.properties.EventProperties;
+import com.teragrep.akv_01.event.metadata.properties.EventPropertiesImpl;
+import com.teragrep.akv_01.event.metadata.properties.EventPropertiesStub;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemProperties;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemPropertiesImpl;
+import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemPropertiesStub;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeStub;
+
 import java.util.*;
 
 public final class ParsedEventListFactory {
@@ -55,6 +71,12 @@ public final class ParsedEventListFactory {
     private final Map<String, Object>[] systemPropertiesArray;
     private final List<Object> enqueuedTimeUtcList;
     private final List<String> offsetList;
+
+    private static final EventPartitionContext eventPartitionContextStub = new EventPartitionContextStub();
+    private static final EventProperties eventPropertiesStub = new EventPropertiesStub();
+    private static final EventSystemProperties eventSystemPropertiesStub = new EventSystemPropertiesStub();
+    private static final EnqueuedTime enqueuedTimeStub = new EnqueuedTimeStub();
+    private static final EventOffset eventOffsetStub = new EventOffsetStub();
 
     public ParsedEventListFactory(
             final String[] payloads,
@@ -76,15 +98,43 @@ public final class ParsedEventListFactory {
         final List<ParsedEvent> events = new ArrayList<>(payloads.length);
         for (int i = 0; i < payloads.length; i++) {
             if (payloads[i] != null) {
+                EventPartitionContext eventPartitionContext = eventPartitionContextStub;
+                EventProperties eventProperties = eventPropertiesStub;
+                EventSystemProperties eventSystemProperties = eventSystemPropertiesStub;
+                EnqueuedTime enqueuedTime = enqueuedTimeStub;
+                EventOffset eventOffset = eventOffsetStub;
+
+                if (partitionCtx != null) {
+                    eventPartitionContext = new EventPartitionContextImpl(partitionCtx);
+                }
+
+                if (propertiesArray != null && propertiesArray[i] != null) {
+                    eventProperties = new EventPropertiesImpl(propertiesArray[i]);
+                }
+
+                if (systemPropertiesArray != null && systemPropertiesArray[i] != null) {
+                    eventSystemProperties = new EventSystemPropertiesImpl(systemPropertiesArray[i]);
+                }
+
+                if (enqueuedTimeUtcList != null && enqueuedTimeUtcList.get(i) != null) {
+                    enqueuedTime = new EnqueuedTimeImpl(enqueuedTimeUtcList.get(i));
+                }
+
+                if (offsetList != null && offsetList.get(i) != null) {
+                    eventOffset = new EventOffsetImpl(offsetList.get(i));
+                }
+
                 events
                         .add(
-                                new EventImpl(
-                                        payloads[i],
-                                        partitionCtx,
-                                        propertiesArray[i],
-                                        systemPropertiesArray[i],
-                                        enqueuedTimeUtcList.get(i),
-                                        offsetList.get(i)
+                                new ParsedEventFactory(
+                                        new UnparsedEventImpl(
+                                                payloads[i],
+                                                eventPartitionContext,
+                                                eventProperties,
+                                                eventSystemProperties,
+                                                enqueuedTime,
+                                                eventOffset
+                                        )
                                 ).parsedEvent()
                         );
             }

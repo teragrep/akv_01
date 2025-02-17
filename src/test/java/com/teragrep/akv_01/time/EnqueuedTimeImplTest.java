@@ -45,6 +45,7 @@
  */
 package com.teragrep.akv_01.time;
 
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

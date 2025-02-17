@@ -88,11 +88,95 @@ public final class ParsedEventListFactoryTest {
         Assertions.assertEquals(PlainEvent.class, events.get(1).getClass());
         Assertions.assertEquals(JSONEvent.class, events.get(2).getClass());
         Assertions
-                .assertEquals(ZonedDateTime.of(2010, 1, 1, 0, 0, 0, 0, ZoneId.of("Z")), events.get(0).enqueuedTime().zonedDateTime());
+                .assertEquals(ZonedDateTime.of(2010, 1, 1, 0, 0, 0, 0, ZoneId.of("Z")), events.get(0).enqueuedTimeUtc().zonedDateTime());
         Assertions
-                .assertEquals(ZonedDateTime.of(2020, 1, 1, 1, 2, 3, 0, ZoneId.of("Z")), events.get(1).enqueuedTime().zonedDateTime());
+                .assertEquals(ZonedDateTime.of(2020, 1, 1, 1, 2, 3, 0, ZoneId.of("Z")), events.get(1).enqueuedTimeUtc().zonedDateTime());
         Assertions
-                .assertEquals(ZonedDateTime.of(2030, 4, 7, 12, 34, 10, 0, ZoneId.of("Z")), events.get(2).enqueuedTime().zonedDateTime());
+                .assertEquals(ZonedDateTime.of(2030, 4, 7, 12, 34, 10, 0, ZoneId.of("Z")), events.get(2).enqueuedTimeUtc().zonedDateTime());
+        Assertions.assertEquals("123", events.get(0).resourceId());
+        Assertions.assertThrows(UnsupportedOperationException.class, events.get(1)::resourceId);
+        Assertions.assertEquals("123", events.get(2).resourceId());
+    }
+
+    @Test
+    void testAsListMethodWithNullObjects() {
+        final String payload = Json.createObjectBuilder().add("resourceId", "123").build().toString();
+        final String[] payloads = new String[] {
+                payload, "string payload", payload
+        };
+
+        final ParsedEventListFactory arrayFactory = new ParsedEventListFactory(payloads, null, null, null, null, null);
+
+        final List<ParsedEvent> events = Assertions.assertDoesNotThrow(arrayFactory::asList);
+        Assertions.assertEquals(3, events.size());
+        Assertions.assertEquals(JSONEvent.class, events.get(0).getClass());
+        Assertions.assertEquals(PlainEvent.class, events.get(1).getClass());
+        Assertions.assertEquals(JSONEvent.class, events.get(2).getClass());
+        Assertions
+                .assertThrows(UnsupportedOperationException.class, () -> events.get(0).enqueuedTimeUtc().zonedDateTime());
+        Assertions
+                .assertThrows(UnsupportedOperationException.class, () -> events.get(1).enqueuedTimeUtc().zonedDateTime());
+        Assertions
+                .assertThrows(UnsupportedOperationException.class, () -> events.get(2).enqueuedTimeUtc().zonedDateTime());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).properties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).properties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).properties().asMap());
+
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).systemProperties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).systemProperties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).systemProperties().asMap());
+
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).offset().value());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).offset().value());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).offset().value());
+
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).partitionCtx().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).partitionCtx().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).partitionCtx().asMap());
+        Assertions.assertEquals("123", events.get(0).resourceId());
+        Assertions.assertThrows(UnsupportedOperationException.class, events.get(1)::resourceId);
+        Assertions.assertEquals("123", events.get(2).resourceId());
+    }
+
+    @Test
+    void testAsListMethodWithNullValuesInArrays() {
+        final String payload = Json.createObjectBuilder().add("resourceId", "123").build().toString();
+        final String[] payloads = new String[] {
+                payload, "string payload", payload
+        };
+
+        final ParsedEventListFactory arrayFactory = new ParsedEventListFactory(payloads, null, new Map[] {
+                null, null, null
+        }, new Map[] {
+                null, null, null
+        }, Arrays.asList(null, null, null), Arrays.asList(null, null, null));
+
+        final List<ParsedEvent> events = Assertions.assertDoesNotThrow(arrayFactory::asList);
+        Assertions.assertEquals(3, events.size());
+        Assertions.assertEquals(JSONEvent.class, events.get(0).getClass());
+        Assertions.assertEquals(PlainEvent.class, events.get(1).getClass());
+        Assertions.assertEquals(JSONEvent.class, events.get(2).getClass());
+        Assertions
+                .assertThrows(UnsupportedOperationException.class, () -> events.get(0).enqueuedTimeUtc().zonedDateTime());
+        Assertions
+                .assertThrows(UnsupportedOperationException.class, () -> events.get(1).enqueuedTimeUtc().zonedDateTime());
+        Assertions
+                .assertThrows(UnsupportedOperationException.class, () -> events.get(2).enqueuedTimeUtc().zonedDateTime());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).properties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).properties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).properties().asMap());
+
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).systemProperties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).systemProperties().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).systemProperties().asMap());
+
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).offset().value());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).offset().value());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).offset().value());
+
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(0).partitionCtx().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(1).partitionCtx().asMap());
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> events.get(2).partitionCtx().asMap());
         Assertions.assertEquals("123", events.get(0).resourceId());
         Assertions.assertThrows(UnsupportedOperationException.class, events.get(1)::resourceId);
         Assertions.assertEquals("123", events.get(2).resourceId());

@@ -94,13 +94,15 @@ public final class MultiRecordEvent {
                 .asJsonObject()
                 .getJsonArray("records")
                 .getValuesAs(
-                        jsonValue -> new EventImpl(
-                                jsonValue.asJsonObject().toString(),
-                                parsedEvent.partitionContext(),
-                                parsedEvent.properties(),
-                                parsedEvent.systemProperties(),
-                                parsedEvent.enqueuedTime(),
-                                parsedEvent.offset()
+                        jsonValue -> new ParsedEventFactory(
+                                new UnparsedEventImpl(
+                                        jsonValue.asJsonObject().toString(),
+                                        parsedEvent.partitionCtx(),
+                                        parsedEvent.properties(),
+                                        parsedEvent.systemProperties(),
+                                        parsedEvent.enqueuedTimeUtc(),
+                                        parsedEvent.offset()
+                                )
                         ).parsedEvent()
                 );
     }

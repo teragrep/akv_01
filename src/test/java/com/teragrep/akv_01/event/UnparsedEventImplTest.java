@@ -55,96 +55,19 @@ import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemProperties
 import com.teragrep.akv_01.event.metadata.systemProperties.EventSystemPropertiesImpl;
 import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
 import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
-import jakarta.json.Json;
+import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeStub;
 import jakarta.json.JsonStructure;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.List;
 
-public final class MultiRecordEventTest {
-
-    @Test
-    void testJsonPayloadWithRecords() {
-        final String payload = Json
-                .createObjectBuilder()
-                .add("records", Json.createArrayBuilder().add(Json.createObjectBuilder().add("key", "value").build()).add(Json.createObjectBuilder().add("key", "value").build())).build().toString();
-        final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());
-        final EventProperties properties = new EventPropertiesImpl(new HashMap<>());
-        final EventSystemProperties systemProperties = new EventSystemPropertiesImpl(new HashMap<>());
-        final EnqueuedTime enqueuedTimeUtc = new EnqueuedTimeImpl("2010-01-01T00:00:00");
-        final EventOffset offset = new EventOffsetImpl("0");
-        UnparsedEvent impl = new UnparsedEventImpl(
-                payload,
-                partitionContext,
-                properties,
-                systemProperties,
-                enqueuedTimeUtc,
-                offset
-        );
-
-        ParsedEvent parsed = new ParsedEventFactory(impl).parsedEvent();
-        Assertions.assertTrue(parsed.isJsonStructure());
-        JsonStructure jsonStructure = Assertions.assertDoesNotThrow(parsed::asJsonStructure);
-        Assertions.assertTrue(jsonStructure.asJsonObject().containsKey("records"));
-
-        MultiRecordEvent mre = new MultiRecordEvent(parsed);
-        Assertions.assertTrue(mre.isValid());
-        List<ParsedEvent> records = Assertions.assertDoesNotThrow(mre::records);
-        Assertions.assertEquals(2, records.size());
-
-        ParsedEvent r1 = records.get(0);
-        ParsedEvent r2 = records.get(1);
-
-        Assertions.assertTrue(r1.isJsonStructure());
-        JsonStructure jsonStructure1 = Assertions.assertDoesNotThrow(r1::asJsonStructure);
-        Assertions.assertEquals("value", jsonStructure1.asJsonObject().getString("key"));
-        Assertions.assertEquals(parsed.enqueuedTimeUtc(), r1.enqueuedTimeUtc());
-        Assertions.assertEquals(parsed.offset(), r1.offset());
-        Assertions.assertEquals(parsed.partitionCtx(), r1.partitionCtx());
-        Assertions.assertEquals(parsed.properties(), r1.properties());
-        Assertions.assertEquals(parsed.systemProperties(), r1.systemProperties());
-
-        Assertions.assertTrue(r2.isJsonStructure());
-        JsonStructure jsonStructure2 = Assertions.assertDoesNotThrow(r2::asJsonStructure);
-        Assertions.assertEquals("value", jsonStructure2.asJsonObject().getString("key"));
-        Assertions.assertEquals(parsed.enqueuedTimeUtc(), r2.enqueuedTimeUtc());
-        Assertions.assertEquals(parsed.offset(), r2.offset());
-        Assertions.assertEquals(parsed.partitionCtx(), r2.partitionCtx());
-        Assertions.assertEquals(parsed.properties(), r2.properties());
-        Assertions.assertEquals(parsed.systemProperties(), r2.systemProperties());
-    }
+public final class UnparsedEventImplTest {
 
     @Test
-    void testWithJsonPayload() {
-        final String payload = Json.createObjectBuilder().build().toString();
-        final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());
-        final EventProperties properties = new EventPropertiesImpl(new HashMap<>());
-        final EventSystemProperties systemProperties = new EventSystemPropertiesImpl(new HashMap<>());
-        final EnqueuedTime enqueuedTimeUtc = new EnqueuedTimeImpl("2010-01-01T00:00:00");
-        final EventOffset offset = new EventOffsetImpl("0");
-        UnparsedEvent impl = new UnparsedEventImpl(
-                payload,
-                partitionContext,
-                properties,
-                systemProperties,
-                enqueuedTimeUtc,
-                offset
-        );
-
-        ParsedEvent parsed = new ParsedEventFactory(impl).parsedEvent();
-        Assertions.assertTrue(parsed.isJsonStructure());
-        Assertions.assertDoesNotThrow(parsed::asJsonStructure);
-
-        MultiRecordEvent mre = new MultiRecordEvent(parsed);
-        Assertions.assertFalse(mre.isValid());
-        Assertions.assertThrows(IllegalStateException.class, mre::records);
-    }
-
-    @Test
-    void testWithPlainPayload() {
-        final String payload = "abc";
+    void testWithNonJsonPayload() {
+        final String payload = "payload here";
         final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());
         final EventProperties properties = new EventPropertiesImpl(new HashMap<>());
         final EventSystemProperties systemProperties = new EventSystemPropertiesImpl(new HashMap<>());
@@ -162,9 +85,60 @@ public final class MultiRecordEventTest {
         ParsedEvent parsed = new ParsedEventFactory(impl).parsedEvent();
         Assertions.assertFalse(parsed.isJsonStructure());
         Assertions.assertThrows(UnsupportedOperationException.class, parsed::asJsonStructure);
+        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTimeUtc().zonedDateTime().toString());
+    }
 
-        MultiRecordEvent mre = new MultiRecordEvent(parsed);
-        Assertions.assertFalse(mre.isValid());
-        Assertions.assertThrows(IllegalStateException.class, mre::records);
+    @Test
+    void testWithJsonPayload() {
+        final String payload = "{\"resourceId\": \"12345\"}";
+        final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());
+        final EventProperties properties = new EventPropertiesImpl(new HashMap<>());
+        final EventSystemProperties systemProperties = new EventSystemPropertiesImpl(new HashMap<>());
+        final EnqueuedTime enqueuedTimeUtc = new EnqueuedTimeImpl("2010-01-01T00:00:00");
+        final EventOffset offset = new EventOffsetImpl("0");
+        UnparsedEvent impl = new UnparsedEventImpl(
+                payload,
+                partitionContext,
+                properties,
+                systemProperties,
+                enqueuedTimeUtc,
+                offset
+        );
+
+        ParsedEvent parsed = new ParsedEventFactory(impl).parsedEvent();
+        Assertions.assertTrue(parsed.isJsonStructure());
+        JsonStructure jsonStructure = Assertions.assertDoesNotThrow(parsed::asJsonStructure);
+        Assertions.assertTrue(jsonStructure.asJsonObject().containsKey("resourceId"));
+        Assertions.assertEquals("12345", jsonStructure.asJsonObject().getString("resourceId"));
+        Assertions.assertEquals("12345", parsed.resourceId());
+        Assertions.assertEquals("2010-01-01T00:00Z", parsed.enqueuedTimeUtc().zonedDateTime().toString());
+    }
+
+    @Test
+    void testWithStubEnqueuedTime() {
+        final String payload = "payload here";
+        final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());
+        final EventProperties properties = new EventPropertiesImpl(new HashMap<>());
+        final EventSystemProperties systemProperties = new EventSystemPropertiesImpl(new HashMap<>());
+        final EnqueuedTime enqueuedTimeUtc = new EnqueuedTimeStub();
+        final EventOffset offset = new EventOffsetImpl("0");
+        UnparsedEvent impl = new UnparsedEventImpl(
+                payload,
+                partitionContext,
+                properties,
+                systemProperties,
+                enqueuedTimeUtc,
+                offset
+        );
+
+        ParsedEvent parsed = new ParsedEventFactory(impl).parsedEvent();
+        Assertions.assertFalse(parsed.isJsonStructure());
+        Assertions.assertThrows(UnsupportedOperationException.class, parsed::asJsonStructure);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> parsed.enqueuedTimeUtc().zonedDateTime());
+    }
+
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.forClass(UnparsedEventImpl.class).verify();
     }
 }
