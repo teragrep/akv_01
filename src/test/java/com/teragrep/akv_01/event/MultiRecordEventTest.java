@@ -117,6 +117,38 @@ public final class MultiRecordEventTest {
     }
 
     @Test
+    void testJsonPayloadWithStringRecords() {
+        final String payload = Json
+                .createObjectBuilder()
+                .add("records", Json.createArrayBuilder().add("string1").add("string2").add("string3"))
+                .build()
+                .toString();
+
+        final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());
+        final EventProperties properties = new EventPropertiesImpl(new HashMap<>());
+        final EventSystemProperties systemProperties = new EventSystemPropertiesImpl(new HashMap<>());
+        final EnqueuedTime enqueuedTimeUtc = new EnqueuedTimeImpl("2010-01-01T00:00:00");
+        final EventOffset offset = new EventOffsetImpl("0");
+        UnparsedEvent impl = new UnparsedEventImpl(
+                payload,
+                partitionContext,
+                properties,
+                systemProperties,
+                enqueuedTimeUtc,
+                offset
+        );
+
+        ParsedEvent parsed = new ParsedEventFactory(impl).parsedEvent();
+        Assertions.assertTrue(parsed.isJsonStructure());
+        JsonStructure jsonStructure = Assertions.assertDoesNotThrow(parsed::asJsonStructure);
+        Assertions.assertTrue(jsonStructure.asJsonObject().containsKey("records"));
+
+        MultiRecordEvent mre = new MultiRecordEvent(parsed);
+        Assertions.assertFalse(mre.isValid());
+        Assertions.assertThrows(IllegalStateException.class, mre::records);
+    }
+
+    @Test
     void testWithJsonPayload() {
         final String payload = Json.createObjectBuilder().build().toString();
         final EventPartitionContext partitionContext = new EventPartitionContextImpl(new HashMap<>());

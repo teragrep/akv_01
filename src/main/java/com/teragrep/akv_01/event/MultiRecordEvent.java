@@ -45,6 +45,7 @@
  */
 package com.teragrep.akv_01.event;
 
+import jakarta.json.JsonArray;
 import jakarta.json.JsonValue;
 
 import java.util.List;
@@ -79,6 +80,16 @@ public final class MultiRecordEvent {
         ) {
             // no records array
             valid = false;
+        }
+
+        if (valid) {
+            final JsonArray recordsArray = parsedEvent.asJsonStructure().asJsonObject().getJsonArray("records");
+            for (final JsonValue record : recordsArray) {
+                if (!record.getValueType().equals(JsonValue.ValueType.OBJECT)) {
+                    valid = false;
+                    break;
+                }
+            }
         }
 
         return valid;
