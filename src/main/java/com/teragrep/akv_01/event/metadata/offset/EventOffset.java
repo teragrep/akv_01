@@ -45,7 +45,7 @@
  */
 package com.teragrep.akv_01.event.metadata.offset;
 
-import com.teragrep.akv_01.Stubable;
+import com.teragrep.stb_01.Stubable;
 
 public interface EventOffset extends Stubable {
 

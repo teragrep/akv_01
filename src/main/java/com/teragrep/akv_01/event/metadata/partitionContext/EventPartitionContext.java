@@ -45,7 +45,7 @@
  */
 package com.teragrep.akv_01.event.metadata.partitionContext;
 
-import com.teragrep.akv_01.Stubable;
+import com.teragrep.stb_01.Stubable;
 
 import java.util.Map;
 

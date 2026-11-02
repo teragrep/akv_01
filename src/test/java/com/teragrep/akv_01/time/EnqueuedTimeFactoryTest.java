@@ -45,7 +45,7 @@
  */
 package com.teragrep.akv_01.time;
 
-import com.teragrep.akv_01.Stubable;
+import com.teragrep.stb_01.Stubable;
 import com.teragrep.akv_01.event.metadata.time.EnqueuedTime;
 import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeFactory;
 import com.teragrep.akv_01.event.metadata.time.EnqueuedTimeImpl;
